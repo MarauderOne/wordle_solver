@@ -119,7 +119,7 @@ func solve(guess []BoxData) string {
     }
 
     //return fmt.Sprint("End of function")
-    var resultSummary string = fmt.Sprintf("\nThe list of possible answers has been reduced to: %v\n", answerList.Count())
+    var resultSummary string = fmt.Sprintf("The list of possible answers has been reduced to: %v\n", answerList.Count())
     results := strings.Join(answerList.Words, " ")
     return resultSummary + results
 }
