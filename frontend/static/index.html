@@ -5,6 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Wordle Solver</title>
     <style>
+        @font-face {
+            font-family: clearsans;
+            src: url(/static/fonts/clear-sans/TTF/ClearSans-Bold.ttf);
+        }
+        @font-face {
+            font-family: karnak;
+            src: url(/static/fonts/karnak_pro/KarnakPro-Medium_400.otf);
+        }
+        h1 {
+            width: 100%;
+            height: 100%;
+            font-family: Karnak;
+            font-size: 32px;
+            text-align: center;
+            position: fixed;
+            top: 5%;
+            left: 0;
+            right: 0;
+            margin: 0 auto;
+        }
         body {
             display: flex;
             justify-content: center;
@@ -12,30 +32,53 @@
             height: 100vh;
             margin: 0;
         }
+        answerbox {
+            width: 80%;
+            height: 30%;
+            background-color: rgb(120, 124, 126);
+            font-family: clearsans;
+            font-size: 18px;
+            text-align: left;
+            position: fixed;
+            top: 60%;
+            left: 0;
+            right: 0;
+            margin: 0 auto;
+            border-radius: 30px;
+            overflow: hidden;
+        }
         .grid {
             display: grid;
             grid-template-columns: repeat(5, 50px);
             gap: 2px 10px;
+            position: relative;
+            top: -150px;
         }
         .box {
             width: 50px;
             height: 50px;
+            font-family: clearsans;
+            font-weight: bold;
             text-align: center;
-            font-size: 24px;
+            font-size: 30px;
             border: 2px solid rgb(199, 199, 199);
-            background-color: rgb(199, 199, 199);
+            text-transform: uppercase;
         }
         .grey {
             border: 2px solid rgb(120, 124, 126);
             background-color: rgb(120, 124, 126);
+            color: white;
+            
         }
         .yellow {
             border: 2px solid rgb(201, 180, 88);
             background-color: rgb(201, 180, 88);
+            color: white;
         }
         .green {
             border: 2px solid rgb(106, 170, 100);
             background-color: rgb(106, 170, 100);
+            color: white;
         }
     </style>
     <script>
@@ -52,28 +95,32 @@
             let newClass = 'grey';
             if (currentClass === 'grey') newClass = 'yellow';
             if (currentClass === 'yellow') newClass = 'green';
-            if (currentClass === 'green') newClass = '';
+            if (currentClass === 'green') newClass = 'grey';
             box.classList.remove('grey', 'yellow', 'green');
             if (newClass) box.classList.add(newClass);
             sendGridState();
         }
 
-        function sendGridState() {
+        async function sendGridState() {
             const boxes = document.querySelectorAll('.box');
             const gridData = Array.from(boxes).map(box => ({
                 character: box.value,
                 color: box.className.split(' ').find(cls => ['grey', 'yellow', 'green'].includes(cls)) || 'none'
             }));
 
-            fetch('/solve', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(gridData)
-            }).then(response => response.json())
-              .then(data => console.log(data))
-              .catch(error => console.error('Error:', error));
+            try {
+                const response = await fetch('/solve', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(gridData)
+                });
+                const data = await response.json();
+                document.getElementById('solution').innerText = data.result;
+            } catch (error) {
+                console.error('Error:', error);
+            }
         }
 
         document.addEventListener("DOMContentLoaded", function() {
@@ -86,6 +133,11 @@
     </script>
 </head>
 <body>
+    <div>
+        <h1>
+            Wordle Solver
+            </h1>
+    </div>
     <div class="grid">
         <input type="text" class="box" maxlength="1">
         <input type="text" class="box" maxlength="1">
@@ -118,5 +170,6 @@
         <input type="text" class="box" maxlength="1">
         <input type="text" class="box" maxlength="1">
     </div>
+    <answerbox id="solution"></answerbox>
 </body>
 </html>
