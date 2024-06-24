@@ -87,7 +87,21 @@
             if (input.value.length > 1) {
                 input.value = input.value.charAt(0);
             }
+            // Enable the next box if this one is filled
+            if (input.value.length === 1) {
+                enableNextBox(input);
+            }
             sendGridState();
+        }
+
+
+        function enableNextBox(currentBox) {
+            const boxes = Array.from(document.querySelectorAll('.box'));
+            const currentIndex = boxes.indexOf(currentBox);
+            if (currentIndex < boxes.length - 1) {
+                boxes[currentIndex + 1].disabled = false;
+                boxes[currentIndex + 1].focus();
+            }
         }
 
         function changeBoxColor(box) {
@@ -140,35 +154,35 @@
     </div>
     <div class="grid">
         <input type="text" class="box" maxlength="1">
-        <input type="text" class="box" maxlength="1">
-        <input type="text" class="box" maxlength="1">
-        <input type="text" class="box" maxlength="1">
-        <input type="text" class="box" maxlength="1">
-        <input type="text" class="box" maxlength="1">
-        <input type="text" class="box" maxlength="1">
-        <input type="text" class="box" maxlength="1">
-        <input type="text" class="box" maxlength="1">
-        <input type="text" class="box" maxlength="1">
-        <input type="text" class="box" maxlength="1">
-        <input type="text" class="box" maxlength="1">
-        <input type="text" class="box" maxlength="1">
-        <input type="text" class="box" maxlength="1">
-        <input type="text" class="box" maxlength="1">
-        <input type="text" class="box" maxlength="1">
-        <input type="text" class="box" maxlength="1">
-        <input type="text" class="box" maxlength="1">
-        <input type="text" class="box" maxlength="1">
-        <input type="text" class="box" maxlength="1">
-        <input type="text" class="box" maxlength="1">
-        <input type="text" class="box" maxlength="1">
-        <input type="text" class="box" maxlength="1">
-        <input type="text" class="box" maxlength="1">
-        <input type="text" class="box" maxlength="1">
-        <input type="text" class="box" maxlength="1">
-        <input type="text" class="box" maxlength="1">
-        <input type="text" class="box" maxlength="1">
-        <input type="text" class="box" maxlength="1">
-        <input type="text" class="box" maxlength="1">
+        <input type="text" class="box" maxlength="1" disabled>
+        <input type="text" class="box" maxlength="1" disabled>
+        <input type="text" class="box" maxlength="1" disabled>
+        <input type="text" class="box" maxlength="1" disabled>
+        <input type="text" class="box" maxlength="1" disabled>
+        <input type="text" class="box" maxlength="1" disabled>
+        <input type="text" class="box" maxlength="1" disabled>
+        <input type="text" class="box" maxlength="1" disabled>
+        <input type="text" class="box" maxlength="1" disabled>
+        <input type="text" class="box" maxlength="1" disabled>
+        <input type="text" class="box" maxlength="1" disabled>
+        <input type="text" class="box" maxlength="1" disabled>
+        <input type="text" class="box" maxlength="1" disabled>
+        <input type="text" class="box" maxlength="1" disabled>
+        <input type="text" class="box" maxlength="1" disabled>
+        <input type="text" class="box" maxlength="1" disabled>
+        <input type="text" class="box" maxlength="1" disabled>
+        <input type="text" class="box" maxlength="1" disabled>
+        <input type="text" class="box" maxlength="1" disabled>
+        <input type="text" class="box" maxlength="1" disabled>
+        <input type="text" class="box" maxlength="1" disabled>
+        <input type="text" class="box" maxlength="1" disabled>
+        <input type="text" class="box" maxlength="1" disabled>
+        <input type="text" class="box" maxlength="1" disabled>
+        <input type="text" class="box" maxlength="1" disabled>
+        <input type="text" class="box" maxlength="1" disabled>
+        <input type="text" class="box" maxlength="1" disabled>
+        <input type="text" class="box" maxlength="1" disabled>
+        <input type="text" class="box" maxlength="1" disabled>
     </div>
     <answerbox id="solution"></answerbox>
 </body>

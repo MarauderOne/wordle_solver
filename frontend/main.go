@@ -138,4 +138,3 @@ func reviseAnswerList(answersList *dictionary_tools.MySimpleDict, regexPattern s
 	d.AddWordsList(newAnswerList)
 	return d
 }
-
