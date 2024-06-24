@@ -32,7 +32,7 @@
             height: 100vh;
             margin: 0;
         }
-        answerbox {
+        .answerbox {
             width: 80%;
             height: 30%;
             background-color: rgb(120, 124, 126);
@@ -40,7 +40,6 @@
             font-size: 18px;
             text-align: justify;
             text-justify: inter-word;
-            text-indent: 40%;
             position: fixed;
             top: 60%;
             left: 0;
@@ -49,7 +48,7 @@
             border-radius: 30px;
             overflow: auto;
             box-sizing: border-box;
-            padding: 2%;
+            padding: 0px 20px 10px;
         }
         .grid {
             display: grid;
@@ -135,6 +134,7 @@
                     body: JSON.stringify(gridData)
                 });
                 const data = await response.json();
+                document.getElementById('solutionSummary').innerText = data.resultSummary;
                 document.getElementById('solution').innerText = data.result;
             } catch (error) {
                 console.error('Error:', error);
@@ -188,6 +188,9 @@
         <input type="text" class="box" maxlength="1" disabled>
         <input type="text" class="box" maxlength="1" disabled>
     </div>
-    <answerbox id="solution"></answerbox>
+    <div class="answerbox">
+        <p id="solutionSummary"></p>
+        <p id="solution" ></p>
+    </div>
 </body>
 </html>

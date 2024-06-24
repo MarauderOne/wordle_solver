@@ -46,16 +46,16 @@ func solveWordle(c *gin.Context) {
 	}
 
 	// Call your Wordle solving function (implement this)
-	result := solve(gridData)
+	result, countOfResults := solve(gridData)
 
 	// Respond with the result
-	c.JSON(http.StatusOK, gin.H{"result": result})
+	c.JSON(http.StatusOK, gin.H{"result": result, "resultSummary": countOfResults})
 }
 
 
 
 // Placeholder for your Wordle solving logic
-func solve(guess []BoxData) string {
+func solve(guess []BoxData) (result, countOfResults string) {
 
     //Initialise answer list
     answerList := createNewAnswerList()
@@ -119,9 +119,9 @@ func solve(guess []BoxData) string {
     }
 
     //return fmt.Sprint("End of function")
-    var resultSummary string = fmt.Sprintf("The list of possible answers has been reduced to: %v\n", answerList.Count())
+    var resultSummary string = fmt.Sprintf("Potenial answers: %v\n", answerList.Count())
     results := strings.Join(answerList.Words, " ")
-    return resultSummary + results
+    return results, resultSummary 
 }
 
 //Define a function to initialise the answerList
