@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wordle Solver</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(5, 50px);
+            gap: 2px 10px;
+        }
+        .box {
+            width: 50px;
+            height: 50px;
+            text-align: center;
+            font-size: 24px;
+            border: 2px solid rgb(199, 199, 199);
+            background-color: rgb(199, 199, 199);
+        }
+        .grey {
+            border: 2px solid rgb(120, 124, 126);
+            background-color: rgb(120, 124, 126);
+        }
+        .yellow {
+            border: 2px solid rgb(201, 180, 88);
+            background-color: rgb(201, 180, 88);
+        }
+        .green {
+            border: 2px solid rgb(106, 170, 100);
+            background-color: rgb(106, 170, 100);
+        }
+    </style>
+    <script>
+        function limitInputToSingleChar(event) {
+            const input = event.target;
+            if (input.value.length > 1) {
+                input.value = input.value.charAt(0);
+            }
+            sendGridState();
+        }
+
+        function changeBoxColor(box) {
+            const currentClass = box.className.split(' ').find(cls => ['grey', 'yellow', 'green'].includes(cls));
+            let newClass = 'grey';
+            if (currentClass === 'grey') newClass = 'yellow';
+            if (currentClass === 'yellow') newClass = 'green';
+            if (currentClass === 'green') newClass = '';
+            box.classList.remove('grey', 'yellow', 'green');
+            if (newClass) box.classList.add(newClass);
+            sendGridState();
+        }
+
+        function sendGridState() {
+            const boxes = document.querySelectorAll('.box');
+            const gridData = Array.from(boxes).map(box => ({
+                character: box.value,
+                color: box.className.split(' ').find(cls => ['grey', 'yellow', 'green'].includes(cls)) || 'none'
+            }));
+
+            fetch('/solve', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(gridData)
+            }).then(response => response.json())
+              .then(data => console.log(data))
+              .catch(error => console.error('Error:', error));
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            const boxes = document.querySelectorAll('.box');
+            boxes.forEach(box => {
+                box.addEventListener('input', limitInputToSingleChar);
+                box.addEventListener('click', () => changeBoxColor(box));
+            });
+        });
+    </script>
+</head>
+<body>
+    <div class="grid">
+        <input type="text" class="box" maxlength="1">
+        <input type="text" class="box" maxlength="1">
+        <input type="text" class="box" maxlength="1">
+        <input type="text" class="box" maxlength="1">
+        <input type="text" class="box" maxlength="1">
+        <input type="text" class="box" maxlength="1">
+        <input type="text" class="box" maxlength="1">
+        <input type="text" class="box" maxlength="1">
+        <input type="text" class="box" maxlength="1">
+        <input type="text" class="box" maxlength="1">
+        <input type="text" class="box" maxlength="1">
+        <input type="text" class="box" maxlength="1">
+        <input type="text" class="box" maxlength="1">
+        <input type="text" class="box" maxlength="1">
+        <input type="text" class="box" maxlength="1">
+        <input type="text" class="box" maxlength="1">
+        <input type="text" class="box" maxlength="1">
+        <input type="text" class="box" maxlength="1">
+        <input type="text" class="box" maxlength="1">
+        <input type="text" class="box" maxlength="1">
+        <input type="text" class="box" maxlength="1">
+        <input type="text" class="box" maxlength="1">
+        <input type="text" class="box" maxlength="1">
+        <input type="text" class="box" maxlength="1">
+        <input type="text" class="box" maxlength="1">
+        <input type="text" class="box" maxlength="1">
+        <input type="text" class="box" maxlength="1">
+        <input type="text" class="box" maxlength="1">
+        <input type="text" class="box" maxlength="1">
+        <input type="text" class="box" maxlength="1">
+    </div>
+</body>
+</html>

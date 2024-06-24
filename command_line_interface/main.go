@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"github.com/MarauderOne/wordle_solver/dictionary_tools"
 	"fmt"
 	"os"
 	"strconv"
@@ -20,7 +21,7 @@ func main() {
 	//Revise the answerList using the regex pattern
 	answerList = reviseAnswerList(answerList, regexPattern)
 	//Tell the user what the number of possible answers has been reduced to
-	fmt.Printf("\nThe list of possible answers has been reduced to: %v\n", answerList.count())
+	fmt.Printf("\nThe list of possible answers has been reduced to: %v\n", answerList.Count())
 	fmt.Println()
 
 	for _, position := range positions {
@@ -31,13 +32,13 @@ func main() {
 		//Revise the answerList using the regex pattern
 		answerList = reviseAnswerList(answerList, regexPattern)
 		//Tell the user what the number of possible answers has been reduced to
-		fmt.Printf("\nThe list of possible answers has been reduced to: %v\n", answerList.count())
+		fmt.Printf("\nThe list of possible answers has been reduced to: %v\n", answerList.Count())
 		//Tell the user what the list of possible answers has been reduced to
-		output := strings.Join(answerList.words, " ")
+		output := strings.Join(answerList.Words, " ")
     	fmt.Println(output)
 		fmt.Println()
 		//If we're down to a single possible answer, break the loop
-		if answerList.count() == 1 {
+		if answerList.Count() == 1 {
 			break
 		}
 	}
@@ -55,9 +56,9 @@ type posAnswer struct {
 }
 
 //Define a function to initialise the answerList
-func createNewAnswerList() (dictionary *mySimpleDict) {
-	d := newSimpleDict()
-	d.load("initialList.dict")
+func createNewAnswerList() (dictionary *dictionary_tools.MySimpleDict) {
+	d := dictionary_tools.NewSimpleDict()
+	d.Load("../dictionary_tools/initialList.dict")
 	return d
 }
 
@@ -170,9 +171,9 @@ func (answerStruct *posAnswer) createRegexPattern() (regexPattern string) {
 }
 
 //Define a function to revise the answerList based on given regex patterns
-func reviseAnswerList(answersList *mySimpleDict, regexPattern string) (revisedDictionary *mySimpleDict) {
-	newAnswerList := answersList.lookup(regexPattern, 0, 6000)
-	d := newSimpleDict()
-	d.addWordsList(newAnswerList)
+func reviseAnswerList(answersList *dictionary_tools.MySimpleDict, regexPattern string) (revisedDictionary *dictionary_tools.MySimpleDict) {
+	newAnswerList := answersList.Lookup(regexPattern, 0, 6000)
+	d := dictionary_tools.NewSimpleDict()
+	d.AddWordsList(newAnswerList)
 	return d
 }

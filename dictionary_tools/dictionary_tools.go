@@ -1,58 +1,58 @@
-package main
+package dictionary_tools
 
 import (
     "regexp"
     "github.com/ddliu/go-dict/util"
 )
 
-func newSimpleDict() *mySimpleDict {
-    return &mySimpleDict{}
+func NewSimpleDict() *MySimpleDict {
+    return &MySimpleDict{}
 }
 
-type mySimpleDict struct {
-    words []string
+type MySimpleDict struct {
+    Words []string
 }
 
-func (this *mySimpleDict) addWordsList(words []string) {
+func (this *MySimpleDict) AddWordsList(words []string) {
     for _, w := range words {
-        this.words = append(this.words, w)
+        this.Words = append(this.Words, w)
     }
 }
 
-func (this *mySimpleDict) count() int {
-    return len(this.words)
+func (this *MySimpleDict) Count() int {
+    return len(this.Words)
 }
 
-func (this *mySimpleDict) load(dict string) {
+func (this *MySimpleDict) Load(dict string) {
     util.WalkFileLines(dict, func(line string) bool {
-        this.words = append(this.words, string(line[:]))
+        this.Words = append(this.Words, string(line[:]))
         return true
     })
 }
 
-func (this *mySimpleDict) lookup(pattern string, offset int, limit int) []string {
+func (this *MySimpleDict) Lookup(pattern string, offset int, limit int) []string {
     if pattern == "" {
         if offset == 0 && limit == 0 {
-            return this.words[:]
+            return this.Words[:]
         }
-        if offset >= len(this.words) {
+        if offset >= len(this.Words) {
             return nil
         }
 
         var end int
         if limit <= 0 {
-            end = len(this.words)
+            end = len(this.Words)
         } else {
             end = offset + limit
         }
 
-        return this.words[offset:end]
+        return this.Words[offset:end]
     }
 
     var compiledPattern = regexp.MustCompile("^" + pattern + "$")
     var matched []string
     found := 0
-    this.walk(func(word string) bool {
+    this.Walk(func(word string) bool {
         if compiledPattern.MatchString(word) {
             found++
 
@@ -73,9 +73,9 @@ func (this *mySimpleDict) lookup(pattern string, offset int, limit int) []string
     return matched
 }
 
-func (this *mySimpleDict) walk(f func(string) bool) {
-    for i := 0; i < len(this.words); i++ {
-        if !f(this.words[i]) {
+func (this *MySimpleDict) Walk(f func(string) bool) {
+    for i := 0; i < len(this.Words); i++ {
+        if !f(this.Words[i]) {
             break
         }
     }
