@@ -98,7 +98,7 @@ func solve(guess []BoxData) (result, countOfResults string) {
         case 4, 9, 14, 19, 24, 29:
             //Character in fifth position
             greenRegex = fmt.Sprintf("....%v", box.Character)
-            yellowRegex = fmt.Sprintf("[%v{1,}]...[^%v]$|^.[%v{1,}]..[^%v]$|^...[%v{1,}].[^%v]$|^...[%v{1,}][^%v]", box.Character, box.Character, box.Character, box.Character, box.Character, box.Character, box.Character, box.Character)
+            yellowRegex = fmt.Sprintf("[%v{1,}]...[^%v]$|^.[%v{1,}]..[^%v]$|^..[%v{1,}].[^%v]$|^...[%v{1,}][^%v]", box.Character, box.Character, box.Character, box.Character, box.Character, box.Character, box.Character, box.Character)
             greyRegex = fmt.Sprintf("....[^%v]", box.Character)
         }
 
@@ -116,7 +116,7 @@ func solve(guess []BoxData) (result, countOfResults string) {
                     answerList = reviseAnswerList(answerList, greyRegex)
 
                 } else {
-                //Invalid color
+                //Invalid color, this should never be reached
         }
 
         //Break the loop if potential answers drop to 1 or fewer
