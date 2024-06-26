@@ -1,10 +1,117 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wordle Solver</title>
+    <link rel="stylesheet" href="./static/styles.css">
+    <script>
+        function limitInputToSingleChar(event) {
+            const input = event.target;
+            if (input.value.length > 1) {
+                input.value = input.value.charAt(0);
+            }
+            // Enable the next box if this one is filled
+            if (input.value.length === 1) {
+                enableNextBox(input);
+            }
+            sendGridState();
+        }
+
+
+        function enableNextBox(currentBox) {
+            const boxes = Array.from(document.querySelectorAll('.box'));
+            const currentIndex = boxes.indexOf(currentBox);
+            if (currentIndex < boxes.length - 1) {
+                boxes[currentIndex + 1].disabled = false;
+                boxes[currentIndex + 1].focus();
+            }
+        }
+
+        function changeBoxColor(box) {
+            const currentClass = box.className.split(' ').find(cls => ['grey', 'yellow', 'green'].includes(cls));
+            let newClass = 'grey';
+            if (currentClass === 'grey') newClass = 'yellow';
+            if (currentClass === 'yellow') newClass = 'green';
+            if (currentClass === 'green') newClass = 'grey';
+            box.classList.remove('grey', 'yellow', 'green');
+            if (newClass) box.classList.add(newClass);
+            sendGridState();
+        }
+
+        async function sendGridState() {
+            const boxes = document.querySelectorAll('.box');
+            const gridData = Array.from(boxes).map(box => ({
+                character: box.value,
+                color: box.className.split(' ').find(cls => ['grey', 'yellow', 'green'].includes(cls)) || ''
+            }));
+
+            try {
+                const response = await fetch('/solve', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(gridData)
+                });
+                const data = await response.json();
+                document.getElementById('solutionSummary').innerText = data.resultSummary;
+                document.getElementById('solution').innerText = data.result;
+            } catch (error) {
+                console.error('error:', error);
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            const boxes = document.querySelectorAll('.box');
+            boxes.forEach(box => {
+                box.addEventListener('input', limitInputToSingleChar);
+                box.addEventListener('click', () => changeBoxColor(box));
+            });
+        });
+    </script>
 </head>
-
 <body>
+    <div>
+        <h1>
+            Wordle Solver
+            </h1>
+    </div>
+    <div class="grid">
+        <input type="text" class="box" maxlength="1">
+        <input type="text" class="box" maxlength="1" disabled>
+        <input type="text" class="box" maxlength="1" disabled>
+        <input type="text" class="box" maxlength="1" disabled>
+        <input type="text" class="box" maxlength="1" disabled>
+        <input type="text" class="box" maxlength="1" disabled>
+        <input type="text" class="box" maxlength="1" disabled>
+        <input type="text" class="box" maxlength="1" disabled>
+        <input type="text" class="box" maxlength="1" disabled>
+        <input type="text" class="box" maxlength="1" disabled>
+        <input type="text" class="box" maxlength="1" disabled>
+        <input type="text" class="box" maxlength="1" disabled>
+        <input type="text" class="box" maxlength="1" disabled>
+        <input type="text" class="box" maxlength="1" disabled>
+        <input type="text" class="box" maxlength="1" disabled>
+        <input type="text" class="box" maxlength="1" disabled>
+        <input type="text" class="box" maxlength="1" disabled>
+        <input type="text" class="box" maxlength="1" disabled>
+        <input type="text" class="box" maxlength="1" disabled>
+        <input type="text" class="box" maxlength="1" disabled>
+        <input type="text" class="box" maxlength="1" disabled>
+        <input type="text" class="box" maxlength="1" disabled>
+        <input type="text" class="box" maxlength="1" disabled>
+        <input type="text" class="box" maxlength="1" disabled>
+        <input type="text" class="box" maxlength="1" disabled>
+        <input type="text" class="box" maxlength="1" disabled>
+        <input type="text" class="box" maxlength="1" disabled>
+        <input type="text" class="box" maxlength="1" disabled>
+        <input type="text" class="box" maxlength="1" disabled>
+        <input type="text" class="box" maxlength="1" disabled>
+    </div>
+    <div class="answerbox">
+        <p id="solutionSummary"></p>
+        <p id="solution" ></p>
+    </div>
 </body>
-
 </html>

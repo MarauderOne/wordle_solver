@@ -35,27 +35,38 @@ type BoxData struct {
 func solveWordle(c *gin.Context) {
 	var gridData []BoxData
 	if err := c.ShouldBindJSON(&gridData); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+		    c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		    return
 	}
 
 	// Call your Wordle solving function (implement this)
-	result, countOfResults := solve(gridData)
+	result, countOfResults, solveError := solve(gridData)
 
-	// Respond with the result
-	c.JSON(http.StatusOK, gin.H{"result": result, "resultSummary": countOfResults})
+    if solveError != "" {
+        //Respond with a 500 error
+        c.JSON(http.StatusInternalServerError, gin.H{"error": solveError})
+    } else {
+        // Respond with the result
+	    c.JSON(http.StatusOK, gin.H{"result": result, "resultSummary": countOfResults})
+    }
 }
 
 
 
 // Placeholder for your Wordle solving logic
-func solve(guess []BoxData) (result, countOfResults string) {
+func solve(guess []BoxData) (result, countOfResults string, solveError string) {
 
     //Initialise answer list
     answerList := createNewAnswerList()
 
     //Start looping through the user boxes
-    for i, box := range guess {
+    revisionLoop: for i, box := range guess {
+
+        //Check for non-alphabetic characters
+        if nonAlpha(box.Character) {
+            solveError = fmt.Sprintf("Invalid character: %v", box.Character)
+            break revisionLoop
+        }
 
         if (box.Character == "") || (box.Color == "") {
             //Skip over boxes which have either no character or no color
@@ -96,21 +107,20 @@ func solve(guess []BoxData) (result, countOfResults string) {
             greyRegex = fmt.Sprintf("....[^%v]", box.Character)
         }
 
-        
-        if box.Color == "green" {
+        switch box.Color {
+        case "green":
             //Find matches for character in position
 		    answerList = reviseAnswerList(answerList, greenRegex)
-
-            } else if box.Color == "yellow" {
-                //Find matches for character anywhere but in position
-                answerList = reviseAnswerList(answerList, yellowRegex)
-
-                } else if box.Color == "grey" {
-                    //Find matches for character not position
-                    answerList = reviseAnswerList(answerList, greyRegex)
-
-                } else {
-                //Invalid color, this should never be reached
+        case "yellow":
+            //Find matches for character not position
+            answerList = reviseAnswerList(answerList, yellowRegex)
+        case "grey":
+            //Find matches for character not position
+            answerList = reviseAnswerList(answerList, greyRegex)
+        default:
+            //Invalid color, this should never be reached
+            solveError = fmt.Sprintf("Invalid color: %v", box.Color)
+            break revisionLoop
         }
 
         //Break the loop if potential answers drop to 1 or fewer
@@ -119,10 +129,9 @@ func solve(guess []BoxData) (result, countOfResults string) {
         }
     }
 
-    //return fmt.Sprint("End of function")
-    var resultSummary string = fmt.Sprintf("Potential answers: %v\n", answerList.Count())
-    results := strings.Join(answerList.Words, " ")
-    return results, resultSummary 
+        var resultSummary string = fmt.Sprintf("Potential answers: %v\n", answerList.Count())
+        results := strings.Join(answerList.Words, " ")
+        return results, resultSummary, solveError
 }
 
 //Define a function to initialise the answerList
@@ -139,3 +148,13 @@ func reviseAnswerList(answersList *dictionary_tools.MySimpleDict, regexPattern s
 	d.AddWordsList(newAnswerList)
 	return d
 }
+
+const alpha = "abcdefghijklmnopqrstuvwxyz"
+func nonAlpha(s string) bool {
+    for _, char := range s {  
+       if strings.Contains(alpha, strings.ToLower(string(char))) {
+          return false
+       }
+    }
+    return true
+ }
