@@ -10,12 +10,6 @@ import (
 
 func main() {
 
-    tmp := []BoxData{
-        {Character:"",Color:""},
-        {Character:"t",Color:"green"},
-    }
-    solve(tmp)
-
 	r := gin.Default()
 
 	// Serve static files
@@ -126,7 +120,7 @@ func solve(guess []BoxData) (result, countOfResults string) {
     }
 
     //return fmt.Sprint("End of function")
-    var resultSummary string = fmt.Sprintf("Potenial answers: %v\n", answerList.Count())
+    var resultSummary string = fmt.Sprintf("Potential answers: %v\n", answerList.Count())
     results := strings.Join(answerList.Words, " ")
     return results, resultSummary 
 }
