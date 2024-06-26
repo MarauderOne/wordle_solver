@@ -63,9 +63,15 @@ func solve(guess []BoxData) (result, countOfResults string) {
     //Start looping through the user boxes
     for i, box := range guess {
 
-    var greenRegex string
-    var yellowRegex string
-    var greyRegex string
+        if (box.Character == "") || (box.Color == "") {
+            //Skip over boxes which have either no character or no color
+            continue
+            //ToDo: Add logging
+        }
+
+        var greenRegex string
+        var yellowRegex string
+        var greyRegex string
 
         //Assign postition based on index number in the array (i)
         switch i {
@@ -86,7 +92,7 @@ func solve(guess []BoxData) (result, countOfResults string) {
             greyRegex = fmt.Sprintf("..[^%v]..", box.Character)
         case 3, 8, 13, 18, 23, 28:
             //Character in fourth position
-            greenRegex = fmt.Sprintf(".%v.", box.Character)
+            greenRegex = fmt.Sprintf("...%v.", box.Character)
             yellowRegex = fmt.Sprintf("[%v{1,}]..[^%v].$|^.[%v{1,}].[^%v].$|^..[%v{1,}][^%v].$|^...[^%v][%v{1,}]", box.Character, box.Character, box.Character, box.Character, box.Character, box.Character, box.Character, box.Character)
             greyRegex = fmt.Sprintf("...[^%v].", box.Character)
         case 4, 9, 14, 19, 24, 29:
@@ -96,12 +102,8 @@ func solve(guess []BoxData) (result, countOfResults string) {
             greyRegex = fmt.Sprintf("....[^%v]", box.Character)
         }
 
-
-        if (box.Character == "") || (box.Color == "") {
-            //Skip over boxes which have wither no character or no color
-            continue
-            //ToDo: Add logging
-        } else if box.Color == "green" {
+        
+        if box.Color == "green" {
             //Find matches for character in position
 		    answerList = reviseAnswerList(answerList, greenRegex)
 
@@ -115,6 +117,11 @@ func solve(guess []BoxData) (result, countOfResults string) {
 
                 } else {
                 //Invalid color
+        }
+
+        //Break the loop if potential answers drop to 1 or fewer
+        if answerList.Count() <= 1 {
+            break
         }
     }
 
