@@ -96,6 +96,10 @@ func TestSolveWordle(t *testing.T) {
 		// Define an invalid grid input (invalid color)
 		gridData := []BoxData{
 			{Character: "p", Color: "purple"},
+			{Character: "", Color: ""},
+			{Character: "", Color: ""},
+			{Character: "", Color: ""},
+			{Character: "", Color: ""},
 		}
 
 		jsonData, _ := json.Marshal(gridData)
