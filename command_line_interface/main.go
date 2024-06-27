@@ -2,8 +2,8 @@ package main
 
 import (
 	"bufio"
-	"github.com/MarauderOne/wordle_solver/dictionary_tools"
 	"fmt"
+	"github.com/MarauderOne/wordle_solver/dictionary_tools"
 	"os"
 	"strconv"
 	"strings"
@@ -35,7 +35,7 @@ func main() {
 		fmt.Printf("\nThe list of possible answers has been reduced to: %v\n", answerList.Count())
 		//Tell the user what the list of possible answers has been reduced to
 		output := strings.Join(answerList.Words, " ")
-    	fmt.Println(output)
+		fmt.Println(output)
 		fmt.Println()
 		//If we're down to a single possible answer, break the loop
 		if answerList.Count() == 1 {
@@ -45,24 +45,24 @@ func main() {
 
 }
 
-//Define a list of possible letter positions
+// Define a list of possible letter positions
 var positions = []string{"first", "second", "third", "fourth", "fifth"}
 
-//Define a data struct for each positive answer
+// Define a data struct for each positive answer
 type posAnswer struct {
 	character     string
 	position      string
 	knownPosition bool
 }
 
-//Define a function to initialise the answerList
+// Define a function to initialise the answerList
 func createNewAnswerList() (dictionary *dictionary_tools.MySimpleDict) {
 	d := dictionary_tools.NewSimpleDict()
 	d.Load("../dictionary_tools/initialList.dict")
 	return d
 }
 
-//Define a function to ask the user which characters they have been able to rule out
+// Define a function to ask the user which characters they have been able to rule out
 func askUserAboutNegatives() (answer string) {
 	reader := bufio.NewReader(os.Stdin)
 	fmt.Printf("Which letters have you been able to rule out? Please type all characters on a single line.\n")
@@ -74,7 +74,7 @@ func askUserAboutNegatives() (answer string) {
 	return answer
 }
 
-//Define a function to ask the user which characters they have found and whether they are green/yellow
+// Define a function to ask the user which characters they have found and whether they are green/yellow
 func askUserAboutPositives(position string) (answers posAnswer) {
 	reader := bufio.NewReader(os.Stdin)
 	fmt.Printf("What is the letter in the %v position? (Enter * for unknown.)\n", position)
@@ -113,13 +113,13 @@ func askUserAboutPositives(position string) (answers posAnswer) {
 	}
 }
 
-//Define a function to turn the negativeAnswers into a regex pattern
+// Define a function to turn the negativeAnswers into a regex pattern
 func createNegativeRegexPattern(negativeAnswers string) (regex string) {
 	r := fmt.Sprintf("[^%v][^%v][^%v][^%v][^%v]", negativeAnswers, negativeAnswers, negativeAnswers, negativeAnswers, negativeAnswers)
 	return r
 }
 
-//Define a method that is applied to answerStruct in order to determine the appropriate regex pattern
+// Define a method that is applied to answerStruct in order to determine the appropriate regex pattern
 func (answerStruct *posAnswer) createRegexPattern() (regexPattern string) {
 	if answerStruct.character == "*" {
 		return "....."
@@ -170,7 +170,7 @@ func (answerStruct *posAnswer) createRegexPattern() (regexPattern string) {
 	return ""
 }
 
-//Define a function to revise the answerList based on given regex patterns
+// Define a function to revise the answerList based on given regex patterns
 func reviseAnswerList(answersList *dictionary_tools.MySimpleDict, regexPattern string) (revisedDictionary *dictionary_tools.MySimpleDict) {
 	newAnswerList := answersList.Lookup(regexPattern, 0, 6000)
 	d := dictionary_tools.NewSimpleDict()

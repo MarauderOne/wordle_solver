@@ -3,11 +3,11 @@ package main
 import (
 	"bytes"
 	"encoding/json"
+	"github.com/gin-gonic/gin"
+	"github.com/stretchr/testify/assert"
 	"net/http"
 	"net/http/httptest"
 	"testing"
-	"github.com/gin-gonic/gin"
-	"github.com/stretchr/testify/assert"
 )
 
 func TestSolveWordle(t *testing.T) {
@@ -19,37 +19,37 @@ func TestSolveWordle(t *testing.T) {
 	t.Run("Test valid input", func(t *testing.T) {
 		// Define a valid grid input
 		gridData := []BoxData{
-        {Character:"i",Color:"grey"},
-		{Character:"r",Color:"grey"},
-		{Character:"a",Color:"yellow"},
-		{Character:"t",Color:"grey"},
-		{Character:"e",Color:"yellow"},
-		{Character:"p",Color:"grey"},
-		{Character:"l",Color:"grey"},
-		{Character:"e",Color:"green"},
-		{Character:"a",Color:"green"},
-		{Character:"d",Color:"green"},
-		{Character:"a",Color:"grey"},
-		{Character:"h",Color:"grey"},
-		{Character:"e",Color:"green"},
-		{Character:"a",Color:"green"},
-		{Character:"d",Color:"green"},
-		{Character:"s",Color:"grey"},
-		{Character:"t",Color:"grey"},
-		{Character:"e",Color:"green"},
-		{Character:"a",Color:"green"},
-		{Character:"d",Color:"green"},
-		{Character:"",Color:""},
-		{Character:"",Color:""},
-		{Character:"",Color:""},
-		{Character:"",Color:""},
-		{Character:"",Color:""},
-		{Character:"",Color:""},
-		{Character:"",Color:""},
-		{Character:"",Color:""},
-		{Character:"",Color:""},
-		{Character:"",Color:""},
-    }
+			{Character: "i", Color: "grey"},
+			{Character: "r", Color: "grey"},
+			{Character: "a", Color: "yellow"},
+			{Character: "t", Color: "grey"},
+			{Character: "e", Color: "yellow"},
+			{Character: "p", Color: "grey"},
+			{Character: "l", Color: "grey"},
+			{Character: "e", Color: "green"},
+			{Character: "a", Color: "green"},
+			{Character: "d", Color: "green"},
+			{Character: "a", Color: "grey"},
+			{Character: "h", Color: "grey"},
+			{Character: "e", Color: "green"},
+			{Character: "a", Color: "green"},
+			{Character: "d", Color: "green"},
+			{Character: "s", Color: "grey"},
+			{Character: "t", Color: "grey"},
+			{Character: "e", Color: "green"},
+			{Character: "a", Color: "green"},
+			{Character: "d", Color: "green"},
+			{Character: "", Color: ""},
+			{Character: "", Color: ""},
+			{Character: "", Color: ""},
+			{Character: "", Color: ""},
+			{Character: "", Color: ""},
+			{Character: "", Color: ""},
+			{Character: "", Color: ""},
+			{Character: "", Color: ""},
+			{Character: "", Color: ""},
+			{Character: "", Color: ""},
+		}
 
 		jsonData, _ := json.Marshal(gridData)
 		req, _ := http.NewRequest(http.MethodPost, "/solve", bytes.NewBuffer(jsonData))
