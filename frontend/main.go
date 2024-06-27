@@ -46,14 +46,14 @@ func solveWordle(c *gin.Context) {
 }
 
 // Placeholder for your Wordle solving logic
-func solve(guess []BoxData) (result, countOfResults string, solveError string) {
+func solve(gridData []BoxData) (result, countOfResults string, solveError string) {
 
 	//Initialise answer list
 	answerList := createNewAnswerList()
 
 	//Start looping through the user boxes
 revisionLoop:
-	for i, box := range guess {
+	for i, box := range gridData {
 
 		//Check for non-alphabetic characters
 		if nonAlpha(box.Character) {
@@ -68,7 +68,7 @@ revisionLoop:
 		}
 
 		//Set regex patterns for each color according current index position
-		greenRegex, yellowRegex, greyRegex := setRegexPatterns(i, box.Character)
+		greenRegex, yellowRegex, greyRegex := setRegexPatterns(i, box.Character, gridData)
 
 		switch box.Color {
 		case "green":
