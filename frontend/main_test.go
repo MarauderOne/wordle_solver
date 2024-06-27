@@ -70,6 +70,35 @@ func TestSolveWordle(t *testing.T) {
 		assert.Equal(t, "Potential answers: 1\n", response["resultSummary"])
 	})
 
+	t.Run("Test grey box regex logic", func(t *testing.T) {
+		// Define a valid grid input
+		gridData := []BoxData{
+			{Character: "t", Color: "grey"},
+			{Character: "t", Color: "grey"},
+			{Character: "t", Color: "grey"},
+			{Character: "t", Color: "grey"},
+			{Character: "t", Color: "grey"},
+		}
+
+		jsonData, _ := json.Marshal(gridData)
+		req, _ := http.NewRequest(http.MethodPost, "/solve", bytes.NewBuffer(jsonData))
+		req.Header.Set("Content-Type", "application/json")
+
+		w := httptest.NewRecorder()
+		r.ServeHTTP(w, req)
+
+		assert.Equal(t, http.StatusOK, w.Code)
+
+		var response map[string]string
+		err := json.Unmarshal(w.Body.Bytes(), &response)
+		assert.NoError(t, err)
+
+		assert.NotEmpty(t, response["result"])
+		assert.NotEmpty(t, response["resultSummary"])
+		assert.NotContains(t, response["result"], "t")
+		assert.Equal(t, "Potential answers: 3908\n", response["resultSummary"])
+	})
+
 	t.Run("Test invalid character input", func(t *testing.T) {
 		// Define an invalid grid input (invalid color)
 		gridData := []BoxData{
