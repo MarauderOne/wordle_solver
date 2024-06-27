@@ -67,38 +67,8 @@ revisionLoop:
 			//ToDo: Add logging
 		}
 
-		var greenRegex string
-		var yellowRegex string
-		var greyRegex string
-
-		//Assign postition based on index number in the array (i)
-		switch i {
-		case 0, 5, 10, 15, 20, 25:
-			//Character in first position
-			greenRegex = fmt.Sprintf("%v....", box.Character)
-			yellowRegex = fmt.Sprintf("[^%v][%v{1,}]...$|^[^%v].[%v{1,}]..$|^[^%v]..[%v{1,}].$|^[^%v]...[%v{1,}]", box.Character, box.Character, box.Character, box.Character, box.Character, box.Character, box.Character, box.Character)
-			greyRegex = fmt.Sprintf("[^%v]....", box.Character)
-		case 1, 6, 11, 16, 21, 26:
-			//Character in second position
-			greenRegex = fmt.Sprintf(".%v...", box.Character)
-			yellowRegex = fmt.Sprintf("[%v{1,}][^%v]...$|^.[^%v][%v{1,}]..$|^.[^%v].[%v{1,}].$|^.[^%v]..[%v{1,}]", box.Character, box.Character, box.Character, box.Character, box.Character, box.Character, box.Character, box.Character)
-			greyRegex = fmt.Sprintf(".[^%v]...", box.Character)
-		case 2, 7, 12, 17, 22, 27:
-			//Character in third position
-			greenRegex = fmt.Sprintf("..%v..", box.Character)
-			yellowRegex = fmt.Sprintf("[%v{1,}].[^%v]..$|^.[%v{1,}][^%v]..$|^..[^%v][%v{1,}].$|^..[^%v].[%v{1,}]", box.Character, box.Character, box.Character, box.Character, box.Character, box.Character, box.Character, box.Character)
-			greyRegex = fmt.Sprintf("..[^%v]..", box.Character)
-		case 3, 8, 13, 18, 23, 28:
-			//Character in fourth position
-			greenRegex = fmt.Sprintf("...%v.", box.Character)
-			yellowRegex = fmt.Sprintf("[%v{1,}]..[^%v].$|^.[%v{1,}].[^%v].$|^..[%v{1,}][^%v].$|^...[^%v][%v{1,}]", box.Character, box.Character, box.Character, box.Character, box.Character, box.Character, box.Character, box.Character)
-			greyRegex = fmt.Sprintf("...[^%v].", box.Character)
-		case 4, 9, 14, 19, 24, 29:
-			//Character in fifth position
-			greenRegex = fmt.Sprintf("....%v", box.Character)
-			yellowRegex = fmt.Sprintf("[%v{1,}]...[^%v]$|^.[%v{1,}]..[^%v]$|^..[%v{1,}].[^%v]$|^...[%v{1,}][^%v]", box.Character, box.Character, box.Character, box.Character, box.Character, box.Character, box.Character, box.Character)
-			greyRegex = fmt.Sprintf("....[^%v]", box.Character)
-		}
+		//Set regex patterns for each color according current index position
+		greenRegex, yellowRegex, greyRegex := setRegexPatterns(i, box.Character)
 
 		switch box.Color {
 		case "green":
