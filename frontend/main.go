@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"github.com/MarauderOne/wordle_solver/dictionary_tools"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"strings"
@@ -25,11 +24,6 @@ func main() {
 
 	// Run the server
 	r.Run(":8080")
-}
-
-type BoxData struct {
-	Character string `json:"character"`
-	Color     string `json:"color"`
 }
 
 func solveWordle(c *gin.Context) {
@@ -131,29 +125,4 @@ revisionLoop:
 	var resultSummary string = fmt.Sprintf("Potential answers: %v\n", answerList.Count())
 	results := strings.Join(answerList.Words, " ")
 	return results, resultSummary, solveError
-}
-
-// Define a function to initialise the answerList
-func createNewAnswerList() (dictionary *dictionary_tools.MySimpleDict) {
-	d := dictionary_tools.NewSimpleDict()
-	d.Load("../dictionary_tools/initialList.dict")
-	return d
-}
-
-// Define a function to revise the answerList based on given regex patterns
-func reviseAnswerList(answersList *dictionary_tools.MySimpleDict, regexPattern string) (revisedDictionary *dictionary_tools.MySimpleDict) {
-	newAnswerList := answersList.Lookup(regexPattern, 0, 6000)
-	d := dictionary_tools.NewSimpleDict()
-	d.AddWordsList(newAnswerList)
-	return d
-}
-
-const alpha = "abcdefghijklmnopqrstuvwxyz"
-
-func nonAlpha(char string) bool {
-	if (strings.Contains(alpha, strings.ToLower(string(char)))) || (string(char) == "") {
-		return false
-	} else {
-		return true
-	}
 }
