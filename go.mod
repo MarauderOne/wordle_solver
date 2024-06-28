@@ -5,7 +5,7 @@ go 1.18
 require (
 	github.com/ddliu/go-dict v0.1.0
 	github.com/gin-gonic/gin v1.10.0
-	github.com/go-playground/assert/v2 v2.2.0
+	github.com/golang/glog v1.2.1
 	github.com/stretchr/testify v1.9.0
 )
 
