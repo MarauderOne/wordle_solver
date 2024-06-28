@@ -1,1 +1,1 @@
-web: solvewordle
+web: frontend/frontend
