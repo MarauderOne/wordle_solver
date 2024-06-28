@@ -1,1 +1,1 @@
-web: frontend
+web: ./frontend/frontend
