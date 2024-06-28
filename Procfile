@@ -1,1 +1,1 @@
-web: ./bin/frontend
+web: ./frontend/frontend
