@@ -26,6 +26,10 @@ func main() {
 
 	//Define the port
 	port := os.Getenv("PORT")
+	//Define default port (for local testing)
+	if port == "" {
+		port = "8080"
+	}
 
 	// Run the server
 	err := r.Run(":" + port)
