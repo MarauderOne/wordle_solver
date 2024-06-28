@@ -29,6 +29,10 @@
         }
 
         function changeBoxColor(box) {
+            if (box.value.trim() === "") {
+                return; // Do nothing if the box is empty
+            }
+
             const currentClass = box.className.split(' ').find(cls => ['grey', 'yellow', 'green'].includes(cls));
             let newClass = 'grey';
             if (currentClass === 'grey') newClass = 'yellow';
