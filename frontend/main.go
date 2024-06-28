@@ -5,6 +5,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/golang/glog"
 	"net/http"
+	"os"
 	"strings"
 )
 
@@ -23,8 +24,11 @@ func main() {
 	// Endpoint to handle Wordle solving
 	r.POST("/solve", solveWordle)
 
+	//Define the port
+	port := os.Getenv("PORT")
+
 	// Run the server
-	err := r.Run(":8080")
+	err := r.Run(":" + port)
 	if err != nil {
 		glog.Fatalf("Web server initialisation failed: %v", err)
 	}
