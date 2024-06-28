@@ -1,1 +1,1 @@
-web: ./frontend/frontend
+web: sh -c 'cd ./frontend/ && ./frontend'
