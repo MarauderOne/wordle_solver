@@ -47,7 +47,7 @@ func solveWordle(c *gin.Context) {
 	}
 
 	// Call your Wordle solving function (implement this)
-	glog.Info("Calling solve function")
+	glog.Infof("Calling solve function with gridData: %v", gridData)
 	result, countOfResults, solveError := solve(gridData)
 
 	if solveError != "" {
