@@ -84,7 +84,6 @@ func solveWordle(gridData []CellData) (result string, countOfResults int, solvin
 	answerList := createNewAnswerList()
 
 	//Start looping through the user boxes
-revisionLoop:
 	for i, box := range gridData {
 
 		//Check for non-alphabetic characters
@@ -93,7 +92,12 @@ revisionLoop:
 			solvingError = fmt.Sprintf("Invalid character: %v", box.Character)
 			httpStatus = http.StatusBadRequest
 			glog.Error("Breaking revision loop")
-			break revisionLoop
+			glog.Info("Writing results summary")
+			var resultCount int = answerList.Count()
+			glog.Info("Writing results")
+			results := strings.Join(answerList.Words, " ")
+			glog.Info("Returning solveWordle function")
+			return results, resultCount, solvingError, httpStatus
 		}
 
 		//Skip over boxes which have either no character or no color
@@ -121,12 +125,17 @@ revisionLoop:
 			glog.Info("Calling reviseAnswerList function using greyRegex pattern")
 			answerList = reviseAnswerList(answerList, greyRegex)
 		default:
-			//Invalid color, this should never be reached
+			//Invalid color, this should never be reached (except in the tests)
 			glog.Errorf("Invalid color recieved: %v", box.Color)
 			solvingError = fmt.Sprintf("Invalid color: %v", box.Color)
 			httpStatus = http.StatusBadRequest
 			glog.Error("Breaking revision loop")
-			break revisionLoop
+			glog.Info("Writing results summary")
+			var resultCount int = answerList.Count()
+			glog.Info("Writing results")
+			results := strings.Join(answerList.Words, " ")
+			glog.Info("Returning solveWordle function")
+			return results, resultCount, solvingError, httpStatus
 		}
 
 		//Break the loop if potential answers drop to 1 or fewer
@@ -140,6 +149,12 @@ revisionLoop:
 		glog.Warning("After applying logic, answerList is still at maximum count")
 		solvingError = fmt.Sprint("Keep adding letters and colors to generate potential answers...")
 		httpStatus = http.StatusBadRequest
+		glog.Info("Writing results summary")
+		var resultCount int = answerList.Count()
+		glog.Info("Writing results")
+		results := strings.Join(answerList.Words, " ")
+		glog.Info("Returning solveWordle function")
+		return results, resultCount, solvingError, httpStatus
 	}
 	
 	glog.Info("Writing results summary")

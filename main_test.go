@@ -60,14 +60,14 @@ func TestSolveWordle(t *testing.T) {
 
 		assert.Equal(t, http.StatusOK, httpResponse.Code)
 
-		var jsonResponse map[string]string
+		var jsonResponse map[string]interface{}
 		err := json.Unmarshal(httpResponse.Body.Bytes(), &jsonResponse)
 		assert.NoError(t, err)
 
 		assert.NotEmpty(t, jsonResponse["result"])
 		assert.NotEmpty(t, jsonResponse["resultSummary"])
 		assert.Equal(t, "KNEAD", jsonResponse["result"])
-		assert.Equal(t, "Potential answers: 1\n", jsonResponse["resultSummary"])
+		assert.Equal(t, float64(1), jsonResponse["resultSummary"])
 	})
 
 	t.Run("Test grey box regex logic", func(t *testing.T) {
@@ -89,14 +89,14 @@ func TestSolveWordle(t *testing.T) {
 
 		assert.Equal(t, http.StatusOK, httpResponse.Code)
 
-		var jsonResponse map[string]string
+		var jsonResponse map[string]interface{}
 		err := json.Unmarshal(httpResponse.Body.Bytes(), &jsonResponse)
 		assert.NoError(t, err)
 
 		assert.NotEmpty(t, jsonResponse["result"])
 		assert.NotEmpty(t, jsonResponse["resultSummary"])
 		assert.NotContains(t, jsonResponse["result"], "t")
-		assert.Equal(t, "Potential answers: 3908\n", jsonResponse["resultSummary"])
+		assert.Equal(t, float64(3908), jsonResponse["resultSummary"])
 	})
 
 	t.Run("Test invalid character input", func(t *testing.T) {
@@ -114,7 +114,7 @@ func TestSolveWordle(t *testing.T) {
 
 		assert.Equal(t, http.StatusBadRequest, httpResponse.Code)
 
-		var jsonResponse map[string]string
+		var jsonResponse map[string]interface{}
 		err := json.Unmarshal(httpResponse.Body.Bytes(), &jsonResponse)
 		assert.NoError(t, err)
 
@@ -140,7 +140,7 @@ func TestSolveWordle(t *testing.T) {
 
 		assert.Equal(t, http.StatusBadRequest, w.Code)
 
-		var jsonResponse map[string]string
+		var jsonResponse map[string]interface{}
 		err := json.Unmarshal(w.Body.Bytes(), &jsonResponse)
 		assert.NoError(t, err)
 
