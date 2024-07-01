@@ -4,73 +4,111 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Wordle Solver</title>
+    <link rel="stylesheet" href="./static/pagination.css">
     <link rel="stylesheet" href="./static/styles.css">
+    <link rel="stylesheet" href="./static/keyboard.css">
     <script>
-        function limitInputToSingleChar(event) {
-            const input = event.target;
-            if (input.value.length > 1) {
-                input.value = input.value.charAt(0);
-            }
-            //Enable the next box if this one is filled
-            if (input.value.length === 1) {
-                enableNextBox(input);
-            }
-            sendGridState();
-        }
-
-
-        function enableNextBox(currentBox) {
-            const boxes = Array.from(document.querySelectorAll('.box'));
-            const currentIndex = boxes.indexOf(currentBox);
-            if (currentIndex < boxes.length - 1) {
-                boxes[currentIndex + 1].disabled = false;
-                boxes[currentIndex + 1].focus();
-            }
-        }
-
-        function changeBoxColor(box) {
-            if (box.value.trim() === "") {
-                return; //Do nothing if the box is empty
-            }
-
-            const currentClass = box.className.split(' ').find(cls => ['grey', 'yellow', 'green'].includes(cls));
-            let newClass = 'grey';
-            if (currentClass === 'grey') newClass = 'yellow';
-            if (currentClass === 'yellow') newClass = 'green';
-            if (currentClass === 'green') newClass = 'grey';
-            box.classList.remove('grey', 'yellow', 'green');
-            if (newClass) box.classList.add(newClass);
-            sendGridState();
-        }
-
-        async function sendGridState() {
-            const boxes = document.querySelectorAll('.box');
-            const gridData = Array.from(boxes).map(box => ({
-                character: box.value.toUpperCase(),
-                color: box.className.split(' ').find(cls => ['grey', 'yellow', 'green'].includes(cls)) || ''
-            }));
-
-            try {
-                const response = await fetch('/guesses', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(gridData)
-                });
-                const data = await response.json();
-                document.getElementById('resultsCount').innerText = data.resultSummary;
-                document.getElementById('results').innerText = data.result;
-                if (data.error) {
-                    throw document.getElementById('resultsCount').innerText = 0,
-                    document.getElementById('results').innerText = data.error;
-                }
-            } catch (error) {
-                console.error('error:', error);   
-            }
-        }
+        let activeBox = null;
 
         document.addEventListener("DOMContentLoaded", function() {
+            // Focus the first box by default
+            const firstBox = document.querySelector('.box');
+            if (firstBox) {
+                firstBox.focus();
+                activeBox = firstBox;
+            }
+
+            // Track the last focused input box
+            document.querySelectorAll('.box').forEach(box => {
+                box.addEventListener('focus', (event) => {
+                    activeBox = event.target;
+                });
+            });
+        
+            // Function to handle key press
+            function handleKeyPress(event) {
+                event.preventDefault();  // Prevent the button from stealing focus
+                const character = event.target.getAttribute('character').toUpperCase();
+                if (activeBox) {
+                    activeBox.value = character;
+                    // Optionally, move focus to the next box
+                    const nextBox = activeBox.nextElementSibling;
+                    if (nextBox && nextBox.classList.contains('box')) {
+                        nextBox.disabled = false;
+                        nextBox.focus();
+                    }
+                }
+            }
+        
+            // Add event listeners to each keyboard button
+            const keyboardKeys = document.querySelectorAll('.keyboardKey');
+            keyboardKeys.forEach(key => {
+                key.addEventListener('click', handleKeyPress);
+            });
+        
+            function limitInputToSingleChar(event) {
+                const input = event.target;
+                if (input.value.length > 1) {
+                    input.value = input.value.charAt(0);
+                }
+                // Enable the next box if this one is filled
+                if (input.value.length === 1) {
+                    enableNextBox(input);
+                }
+                sendGridState();
+            }
+        
+            function enableNextBox(currentBox) {
+                const boxes = Array.from(document.querySelectorAll('.box'));
+                const currentIndex = boxes.indexOf(currentBox);
+                if (currentIndex < boxes.length - 1) {
+                    boxes[currentIndex + 1].disabled = false;
+                    boxes[currentIndex + 1].focus();
+                }
+            }
+        
+            function changeBoxColor(box) {
+                if (box.value.trim() === "") {
+                    return; // Do nothing if the box is empty
+                }
+            
+                const currentClass = box.className.split(' ').find(cls => ['grey', 'yellow', 'green'].includes(cls));
+                let newClass = 'grey';
+                if (currentClass === 'grey') newClass = 'yellow';
+                if (currentClass === 'yellow') newClass = 'green';
+                if (currentClass === 'green') newClass = 'grey';
+                box.classList.remove('grey', 'yellow', 'green');
+                if (newClass) box.classList.add(newClass);
+                sendGridState();
+            }
+        
+            async function sendGridState() {
+                const boxes = document.querySelectorAll('.box');
+                const gridData = Array.from(boxes).map(box => ({
+                    character: box.value.toUpperCase(),
+                    color: box.className.split(' ').find(cls => ['grey', 'yellow', 'green'].includes(cls)) || ''
+                }));
+            
+                try {
+                    const response = await fetch('/guesses', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(gridData)
+                    });
+                    const data = await response.json();
+                    document.getElementById('resultsCount').innerText = data.resultSummary;
+                    document.getElementById('results').innerText = data.result;
+                    if (data.error) {
+                        throw document.getElementById('resultsCount').innerText = 0,
+                        document.getElementById('results').innerText = data.error;
+                    }
+                } catch (error) {
+                    console.error('error:', error);   
+                }
+            }
+        
             const boxes = document.querySelectorAll('.box');
             boxes.forEach(box => {
                 box.addEventListener('input', limitInputToSingleChar);
@@ -90,43 +128,96 @@
             Enter your current Wordle guesses to find potential answers:
         </h2>
     </div>
-    <div class="grid">
-        <input type="text" class="box" maxlength="1">
-        <input type="text" class="box" maxlength="1" disabled>
-        <input type="text" class="box" maxlength="1" disabled>
-        <input type="text" class="box" maxlength="1" disabled>
-        <input type="text" class="box" maxlength="1" disabled>
-        <input type="text" class="box" maxlength="1" disabled>
-        <input type="text" class="box" maxlength="1" disabled>
-        <input type="text" class="box" maxlength="1" disabled>
-        <input type="text" class="box" maxlength="1" disabled>
-        <input type="text" class="box" maxlength="1" disabled>
-        <input type="text" class="box" maxlength="1" disabled>
-        <input type="text" class="box" maxlength="1" disabled>
-        <input type="text" class="box" maxlength="1" disabled>
-        <input type="text" class="box" maxlength="1" disabled>
-        <input type="text" class="box" maxlength="1" disabled>
-        <input type="text" class="box" maxlength="1" disabled>
-        <input type="text" class="box" maxlength="1" disabled>
-        <input type="text" class="box" maxlength="1" disabled>
-        <input type="text" class="box" maxlength="1" disabled>
-        <input type="text" class="box" maxlength="1" disabled>
-        <input type="text" class="box" maxlength="1" disabled>
-        <input type="text" class="box" maxlength="1" disabled>
-        <input type="text" class="box" maxlength="1" disabled>
-        <input type="text" class="box" maxlength="1" disabled>
-        <input type="text" class="box" maxlength="1" disabled>
-        <input type="text" class="box" maxlength="1" disabled>
-        <input type="text" class="box" maxlength="1" disabled>
-        <input type="text" class="box" maxlength="1" disabled>
-        <input type="text" class="box" maxlength="1" disabled>
-        <input type="text" class="box" maxlength="1" disabled>
-    </div>
-    <div class="answerbox">
-            <p>
-                Potential answers: <span id="resultsCount" ></span>
-            </p>
-        <p id="results" ></p>
-    </div>
+
+    <div class="split left">
+        <div class="centered">
+            <div class="grid centered">
+                <input type="text" class="box" maxlength="1">
+                <input type="text" class="box" maxlength="1" disabled>
+                <input type="text" class="box" maxlength="1" disabled>
+                <input type="text" class="box" maxlength="1" disabled>
+                <input type="text" class="box" maxlength="1" disabled>
+                <input type="text" class="box" maxlength="1" disabled>
+                <input type="text" class="box" maxlength="1" disabled>
+                <input type="text" class="box" maxlength="1" disabled>
+                <input type="text" class="box" maxlength="1" disabled>
+                <input type="text" class="box" maxlength="1" disabled>
+                <input type="text" class="box" maxlength="1" disabled>
+                <input type="text" class="box" maxlength="1" disabled>
+                <input type="text" class="box" maxlength="1" disabled>
+                <input type="text" class="box" maxlength="1" disabled>
+                <input type="text" class="box" maxlength="1" disabled>
+                <input type="text" class="box" maxlength="1" disabled>
+                <input type="text" class="box" maxlength="1" disabled>
+                <input type="text" class="box" maxlength="1" disabled>
+                <input type="text" class="box" maxlength="1" disabled>
+                <input type="text" class="box" maxlength="1" disabled>
+                <input type="text" class="box" maxlength="1" disabled>
+                <input type="text" class="box" maxlength="1" disabled>
+                <input type="text" class="box" maxlength="1" disabled>
+                <input type="text" class="box" maxlength="1" disabled>
+                <input type="text" class="box" maxlength="1" disabled>
+                <input type="text" class="box" maxlength="1" disabled>
+                <input type="text" class="box" maxlength="1" disabled>
+                <input type="text" class="box" maxlength="1" disabled>
+                <input type="text" class="box" maxlength="1" disabled>
+                <input type="text" class="box" maxlength="1" disabled>
+            </div>
+            <div class="grid centered">
+                <div class="keyboard centered">
+                    <div class="row">
+                        <button type="button" character="q" class="keyboardKey">q</button>
+                        <button type="button" character="w" class="keyboardKey">w</button>
+                        <button type="button" character="e" class="keyboardKey">e</button>
+                        <button type="button" character="r" class="keyboardKey">r</button>
+                        <button type="button" character="t" class="keyboardKey">t</button>
+                        <button type="button" character="y" class="keyboardKey">y</button>
+                        <button type="button" character="u" class="keyboardKey">u</button>
+                        <button type="button" character="i" class="keyboardKey">i</button>
+                        <button type="button" character="o" class="keyboardKey">o</button>
+                        <button type="button" character="p" class="keyboardKey">p</button>
+                    </div>
+                    <div class="row">
+                        <div class="half"> </div>
+                        <button type="button" character="a" class="keyboardKey">a</button>
+                        <button type="button" character="s" class="keyboardKey">s</button>
+                        <button type="button" character="d" class="keyboardKey">d</button>
+                        <button type="button" character="f" class="keyboardKey">f</button>
+                        <button type="button" character="g" class="keyboardKey">g</button>
+                        <button type="button" character="h" class="keyboardKey">h</button>
+                        <button type="button" character="j" class="keyboardKey">j</button>
+                        <button type="button" character="k" class="keyboardKey">k</button>
+                        <button type="button" character="l" class="keyboardKey">l</button>
+                        <div class="half"> </div>
+                    </div>
+                    <div class="row">
+                        <div class="oneAndAHalf"> </div> <!-- On normal Wordle this would be the Enter button -->
+                        <button type="button" character="z" class="keyboardKey">z</button>
+                        <button type="button" character="x" class="keyboardKey">x</button>
+                        <button type="button" character="c" class="keyboardKey">c</button>
+                        <button type="button" character="v" class="keyboardKey">v</button>
+                        <button type="button" character="b" class="keyboardKey">b</button>
+                        <button type="button" character="n" class="keyboardKey">n</button>
+                        <button type="button" character="m" class="keyboardKey">m</button>
+                        <button type="button" character="←" class="keyboardKey oneAndAHalf"><svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 0 24 24" width="20" class="game-icon" data-testid="icon-backspace"><path fill="var(--color-tone-1)" d="M22 3H7c-.69 0-1.23.35-1.59.88L0 12l5.41 8.11c.36.53.9.89 1.59.89h15c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H7.07L2.4 12l4.66-7H22v14zm-11.59-2L14 13.41 17.59 17 19 15.59 15.41 12 19 8.41 17.59 7 14 10.59 10.41 7 9 8.41 12.59 12 9 15.59z"></path></svg></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+      </div>
+      
+      <div class="split right">
+        <div class="centered">
+            <div class="answerbox centered">
+                <p>
+                    Potential answers: <span id="resultsCount" ></span>
+                </p>
+            <p id="results" ></p>
+        </div>
+        </div>
+      </div>
+
+    
+    
 </body>
 </html>

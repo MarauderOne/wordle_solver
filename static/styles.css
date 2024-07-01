@@ -42,8 +42,6 @@ body {
     display: grid;
     grid-template-columns: repeat(5, 61px);
     gap: 5px 10px;
-    position: fixed;
-    top: 23%;
 }
 .box {
     width: 58px;
@@ -73,18 +71,15 @@ body {
     color: white;
 }
 .answerbox {
-    width: 80%;
-    height: 30%;
+    width: 800px;
+    height: 850px;
     font-family: clearsans;
     font-size: 18px;
     text-align: justify;
     text-justify: inter-word;
-    position: fixed;
-    top: 60%;
-    left: 0;
-    right: 0;
     margin: 0 auto;
     border: 2px solid rgb(199, 199, 199);
+    background-color: white;
     border-radius: 30px;
     overflow: auto;
     box-sizing: border-box;
