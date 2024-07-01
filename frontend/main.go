@@ -46,6 +46,11 @@ func solveWordle(c *gin.Context) {
 		return
 	}
 
+	// Convert Character values to uppercase
+	for i := range gridData {
+			gridData[i].Character = strings.ToUpper(gridData[i].Character)
+	}
+
 	// Call your Wordle solving function (implement this)
 	glog.Infof("Calling solve function with gridData: %v", gridData)
 	result, countOfResults, solveError := solve(gridData)

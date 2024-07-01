@@ -66,7 +66,7 @@ func TestSolveWordle(t *testing.T) {
 
 		assert.NotEmpty(t, response["result"])
 		assert.NotEmpty(t, response["resultSummary"])
-		assert.Equal(t, "knead", response["result"])
+		assert.Equal(t, "KNEAD", response["result"])
 		assert.Equal(t, "Potential answers: 1\n", response["resultSummary"])
 	})
 

@@ -138,10 +138,10 @@ func nonAlpha(char string) bool {
 
 	//Define a list of alphabetic characters
 	glog.Info("Defining list of alphabetic characters")
-	const alpha = "abcdefghijklmnopqrstuvwxyz"
+	const alpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
 	glog.Info("Checking if box character is alphabetic")
-	if (strings.Contains(alpha, strings.ToLower(string(char)))) || (string(char) == "") {
+	if (strings.Contains(alpha, strings.ToUpper(string(char)))) || (string(char) == "") {
 		glog.Info("Box character is alphabetic")
 		return false
 	} else {

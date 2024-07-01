@@ -46,7 +46,7 @@
         async function sendGridState() {
             const boxes = document.querySelectorAll('.box');
             const gridData = Array.from(boxes).map(box => ({
-                character: box.value,
+                character: box.value.toUpperCase(),
                 color: box.className.split(' ').find(cls => ['grey', 'yellow', 'green'].includes(cls)) || ''
             }));
 
