@@ -59,10 +59,14 @@
                     body: JSON.stringify(gridData)
                 });
                 const data = await response.json();
-                document.getElementById('solutionSummary').innerText = data.resultSummary;
-                document.getElementById('solution').innerText = data.result;
+                document.getElementById('resultsCount').innerText = data.resultSummary;
+                document.getElementById('results').innerText = data.result;
+                if (data.error) {
+                    throw document.getElementById('resultsCount').innerText = 0,
+                    document.getElementById('results').innerText = data.error;
+                }
             } catch (error) {
-                console.error('error:', error);
+                console.error('error:', error);   
             }
         }
 
@@ -119,8 +123,10 @@
         <input type="text" class="box" maxlength="1" disabled>
     </div>
     <div class="answerbox">
-        <p id="solutionSummary"></p>
-        <p id="solution" ></p>
+            <p>
+                Potential answers: <span id="resultsCount" ></span>
+            </p>
+        <p id="results" ></p>
     </div>
 </body>
 </html>

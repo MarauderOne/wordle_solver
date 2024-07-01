@@ -74,7 +74,7 @@ func parseGuesses(c *gin.Context) {
 }
 
 // Placeholder for your Wordle solving logic
-func solveWordle(gridData []CellData) (result, countOfResults string, solvingError string, httpStatus int) {
+func solveWordle(gridData []CellData) (result string, countOfResults int, solvingError string, httpStatus int) {
 
 	//Set default HTTP response code (will be updated if there is an error)
 	httpStatus = http.StatusOK
@@ -137,9 +137,9 @@ revisionLoop:
 	}
 
 	glog.Info("Writing results summary")
-	var resultSummary string = fmt.Sprintf("Potential answers: %v\n", answerList.Count())
+	var resultCount int = answerList.Count()
 	glog.Info("Writing results")
 	results := strings.Join(answerList.Words, " ")
 	glog.Info("Returning solveWordle function")
-	return results, resultSummary, solvingError, httpStatus
+	return results, resultCount, solvingError, httpStatus
 }
