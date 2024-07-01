@@ -13,32 +13,32 @@ import (
 func TestSolveWordle(t *testing.T) {
 	gin.SetMode(gin.TestMode)
 
-	r := gin.Default()
-	r.POST("/solve", solveWordle)
+	webServer := gin.Default()
+	webServer.POST("/guesses", parseGuesses)
 
 	t.Run("Test valid input", func(t *testing.T) {
-		// Define a valid grid input
-		gridData := []BoxData{
-			{Character: "i", Color: "grey"},
-			{Character: "r", Color: "grey"},
-			{Character: "a", Color: "yellow"},
-			{Character: "t", Color: "grey"},
-			{Character: "e", Color: "yellow"},
-			{Character: "p", Color: "grey"},
-			{Character: "l", Color: "grey"},
-			{Character: "e", Color: "green"},
-			{Character: "a", Color: "green"},
-			{Character: "d", Color: "green"},
-			{Character: "a", Color: "grey"},
-			{Character: "h", Color: "grey"},
-			{Character: "e", Color: "green"},
-			{Character: "a", Color: "green"},
-			{Character: "d", Color: "green"},
-			{Character: "s", Color: "grey"},
-			{Character: "t", Color: "grey"},
-			{Character: "e", Color: "green"},
-			{Character: "a", Color: "green"},
-			{Character: "d", Color: "green"},
+		//Define a valid grid input
+		gridData := []CellData{
+			{Character: "I", Color: "grey"},
+			{Character: "R", Color: "grey"},
+			{Character: "A", Color: "yellow"},
+			{Character: "T", Color: "grey"},
+			{Character: "E", Color: "yellow"},
+			{Character: "P", Color: "grey"},
+			{Character: "L", Color: "grey"},
+			{Character: "E", Color: "green"},
+			{Character: "A", Color: "green"},
+			{Character: "D", Color: "green"},
+			{Character: "A", Color: "grey"},
+			{Character: "H", Color: "grey"},
+			{Character: "E", Color: "green"},
+			{Character: "A", Color: "green"},
+			{Character: "D", Color: "green"},
+			{Character: "S", Color: "grey"},
+			{Character: "T", Color: "grey"},
+			{Character: "E", Color: "green"},
+			{Character: "A", Color: "green"},
+			{Character: "D", Color: "green"},
 			{Character: "", Color: ""},
 			{Character: "", Color: ""},
 			{Character: "", Color: ""},
@@ -52,79 +52,79 @@ func TestSolveWordle(t *testing.T) {
 		}
 
 		jsonData, _ := json.Marshal(gridData)
-		req, _ := http.NewRequest(http.MethodPost, "/solve", bytes.NewBuffer(jsonData))
+		req, _ := http.NewRequest(http.MethodPost, "/guesses", bytes.NewBuffer(jsonData))
 		req.Header.Set("Content-Type", "application/json")
 
-		w := httptest.NewRecorder()
-		r.ServeHTTP(w, req)
+		httpResponse := httptest.NewRecorder()
+		webServer.ServeHTTP(httpResponse, req)
 
-		assert.Equal(t, http.StatusOK, w.Code)
+		assert.Equal(t, http.StatusOK, httpResponse.Code)
 
-		var response map[string]string
-		err := json.Unmarshal(w.Body.Bytes(), &response)
+		var jsonResponse map[string]string
+		err := json.Unmarshal(httpResponse.Body.Bytes(), &jsonResponse)
 		assert.NoError(t, err)
 
-		assert.NotEmpty(t, response["result"])
-		assert.NotEmpty(t, response["resultSummary"])
-		assert.Equal(t, "KNEAD", response["result"])
-		assert.Equal(t, "Potential answers: 1\n", response["resultSummary"])
+		assert.NotEmpty(t, jsonResponse["result"])
+		assert.NotEmpty(t, jsonResponse["resultSummary"])
+		assert.Equal(t, "KNEAD", jsonResponse["result"])
+		assert.Equal(t, "Potential answers: 1\n", jsonResponse["resultSummary"])
 	})
 
 	t.Run("Test grey box regex logic", func(t *testing.T) {
-		// Define a valid grid input
-		gridData := []BoxData{
-			{Character: "t", Color: "grey"},
-			{Character: "t", Color: "grey"},
-			{Character: "t", Color: "grey"},
-			{Character: "t", Color: "grey"},
-			{Character: "t", Color: "grey"},
+		//Define a valid grid input
+		gridData := []CellData{
+			{Character: "T", Color: "grey"},
+			{Character: "T", Color: "grey"},
+			{Character: "T", Color: "grey"},
+			{Character: "T", Color: "grey"},
+			{Character: "T", Color: "grey"},
 		}
 
 		jsonData, _ := json.Marshal(gridData)
-		req, _ := http.NewRequest(http.MethodPost, "/solve", bytes.NewBuffer(jsonData))
+		req, _ := http.NewRequest(http.MethodPost, "/guesses", bytes.NewBuffer(jsonData))
 		req.Header.Set("Content-Type", "application/json")
 
-		w := httptest.NewRecorder()
-		r.ServeHTTP(w, req)
+		httpResponse := httptest.NewRecorder()
+		webServer.ServeHTTP(httpResponse, req)
 
-		assert.Equal(t, http.StatusOK, w.Code)
+		assert.Equal(t, http.StatusOK, httpResponse.Code)
 
-		var response map[string]string
-		err := json.Unmarshal(w.Body.Bytes(), &response)
+		var jsonResponse map[string]string
+		err := json.Unmarshal(httpResponse.Body.Bytes(), &jsonResponse)
 		assert.NoError(t, err)
 
-		assert.NotEmpty(t, response["result"])
-		assert.NotEmpty(t, response["resultSummary"])
-		assert.NotContains(t, response["result"], "t")
-		assert.Equal(t, "Potential answers: 3908\n", response["resultSummary"])
+		assert.NotEmpty(t, jsonResponse["result"])
+		assert.NotEmpty(t, jsonResponse["resultSummary"])
+		assert.NotContains(t, jsonResponse["result"], "t")
+		assert.Equal(t, "Potential answers: 3908\n", jsonResponse["resultSummary"])
 	})
 
 	t.Run("Test invalid character input", func(t *testing.T) {
-		// Define an invalid grid input (invalid color)
-		gridData := []BoxData{
+		//Define an invalid grid input (invalid color)
+		gridData := []CellData{
 			{Character: "&", Color: "green"},
 		}
 
 		jsonData, _ := json.Marshal(gridData)
-		req, _ := http.NewRequest(http.MethodPost, "/solve", bytes.NewBuffer(jsonData))
+		req, _ := http.NewRequest(http.MethodPost, "/guesses", bytes.NewBuffer(jsonData))
 		req.Header.Set("Content-Type", "application/json")
 
-		w := httptest.NewRecorder()
-		r.ServeHTTP(w, req)
+		httpResponse := httptest.NewRecorder()
+		webServer.ServeHTTP(httpResponse, req)
 
-		assert.Equal(t, http.StatusInternalServerError, w.Code)
+		assert.Equal(t, http.StatusBadRequest, httpResponse.Code)
 
-		var response map[string]string
-		err := json.Unmarshal(w.Body.Bytes(), &response)
+		var jsonResponse map[string]string
+		err := json.Unmarshal(httpResponse.Body.Bytes(), &jsonResponse)
 		assert.NoError(t, err)
 
-		assert.Contains(t, response["error"], "Invalid character: &")
+		assert.Contains(t, jsonResponse["error"], "Invalid character: &")
 	})
 
 	t.Run("Test invalid color input", func(t *testing.T) {
-		// Define an invalid grid input (invalid color)
-		gridData := []BoxData{
-			{Character: "p", Color: "purple"},
+		//Define an invalid grid input (invalid color)
+		gridData := []CellData{
+			{Character: "P", Color: "purple"},
 			{Character: "", Color: ""},
 			{Character: "", Color: ""},
 			{Character: "", Color: ""},
@@ -132,18 +132,18 @@ func TestSolveWordle(t *testing.T) {
 		}
 
 		jsonData, _ := json.Marshal(gridData)
-		req, _ := http.NewRequest(http.MethodPost, "/solve", bytes.NewBuffer(jsonData))
+		req, _ := http.NewRequest(http.MethodPost, "/guesses", bytes.NewBuffer(jsonData))
 		req.Header.Set("Content-Type", "application/json")
 
 		w := httptest.NewRecorder()
-		r.ServeHTTP(w, req)
+		webServer.ServeHTTP(w, req)
 
-		assert.Equal(t, http.StatusInternalServerError, w.Code)
+		assert.Equal(t, http.StatusBadRequest, w.Code)
 
-		var response map[string]string
-		err := json.Unmarshal(w.Body.Bytes(), &response)
+		var jsonResponse map[string]string
+		err := json.Unmarshal(w.Body.Bytes(), &jsonResponse)
 		assert.NoError(t, err)
 
-		assert.Contains(t, response["error"], "Invalid color: purple")
+		assert.Contains(t, jsonResponse["error"], "Invalid color: purple")
 	})
 }

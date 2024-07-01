@@ -11,7 +11,7 @@
             if (input.value.length > 1) {
                 input.value = input.value.charAt(0);
             }
-            // Enable the next box if this one is filled
+            //Enable the next box if this one is filled
             if (input.value.length === 1) {
                 enableNextBox(input);
             }
@@ -30,7 +30,7 @@
 
         function changeBoxColor(box) {
             if (box.value.trim() === "") {
-                return; // Do nothing if the box is empty
+                return; //Do nothing if the box is empty
             }
 
             const currentClass = box.className.split(' ').find(cls => ['grey', 'yellow', 'green'].includes(cls));
@@ -51,7 +51,7 @@
             }));
 
             try {
-                const response = await fetch('/solve', {
+                const response = await fetch('/guesses', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'

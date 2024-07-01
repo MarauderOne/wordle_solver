@@ -15,18 +15,18 @@ func main() {
 	//Parse the argument flags (like the ones in Heroku's Procfile)
 	flag.Parse()
 
-	r := gin.Default()
+	webServer := gin.Default()
 
-	// Serve static files
-	r.Static("/static", "./static")
+	//Serve static files
+	webServer.Static("/static", "./static")
 
-	// Define your routes
-	r.GET("/", func(c *gin.Context) {
+	//Define routes
+	webServer.GET("/", func(c *gin.Context) {
 		c.File("./static/index.html")
 	})
 
-	// Endpoint to handle Wordle solving
-	r.POST("/solve", solveWordle)
+	//Endpoint to handle Wordle solving
+	webServer.POST("/guesses", parseGuesses)
 
 	//Define the port
 	port := os.Getenv("PORT")
@@ -35,45 +35,49 @@ func main() {
 		port = "8080"
 	}
 
-	// Run the server
-	err := r.Run(":" + port)
+	//Run the webserver
+	err := webServer.Run(":" + port)
 	if err != nil {
 		glog.Fatalf("Web server initialisation failed: %v", err)
 	}
 }
 
-func solveWordle(c *gin.Context) {
-	var gridData []BoxData
+//Define function for parse user's guesses
+func parseGuesses(c *gin.Context) {
+	var gridData []CellData
 	if err := c.ShouldBindJSON(&gridData); err != nil {
 		glog.Errorf("Unable to bind JSON from page: %v", err)
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	// Convert Character values to uppercase
+	//Convert Character values to uppercase
 	for i := range gridData {
 			gridData[i].Character = strings.ToUpper(gridData[i].Character)
 	}
 
-	// Call your Wordle solving function (implement this)
-	glog.Infof("Calling solve function with gridData: %v", gridData)
-	result, countOfResults, solveError := solve(gridData)
+	//Call the Wordle solving function
+	glog.Infof("Calling solveWordle function with gridData: %v", gridData)
+	result, countOfResults, solvingError, httpStatus := solveWordle(gridData)
 
-	if solveError != "" {
-		//Respond with a 500 error
-		glog.Warningf("Responding to page with error response: %v", solveError)
+	if solvingError != "" {
+		//Respond with the http status code and error message returned by the solveWordle function
+		glog.Warningf("Responding to page with error response: %v", solvingError)
 		glog.Flush()
-		c.JSON(http.StatusInternalServerError, gin.H{"error": solveError})
+		c.JSON(httpStatus, gin.H{"error": solvingError})
 	} else {
 		// Respond with the result
 		glog.Info("Responding to the page with expected results")
 		glog.Flush()
-		c.JSON(http.StatusOK, gin.H{"result": result, "resultSummary": countOfResults})
+		c.JSON(httpStatus, gin.H{"result": result, "resultSummary": countOfResults})
 	}
 }
 
 // Placeholder for your Wordle solving logic
-func solve(gridData []BoxData) (result, countOfResults string, solveError string) {
+func solveWordle(gridData []CellData) (result, countOfResults string, solvingError string, httpStatus int) {
+
+	//Set default HTTP response code (will be updated if there is an error)
+	httpStatus = http.StatusOK
 
 	//Initialise answer list
 	glog.Info("Calling createNewAnswerList function")
@@ -86,7 +90,8 @@ revisionLoop:
 		//Check for non-alphabetic characters
 		if nonAlpha(box.Character) {
 			glog.Errorf("Invalid character recieved: %v", box.Character)
-			solveError = fmt.Sprintf("Invalid character: %v", box.Character)
+			solvingError = fmt.Sprintf("Invalid character: %v", box.Character)
+			httpStatus = http.StatusBadRequest
 			glog.Error("Breaking revision loop")
 			break revisionLoop
 		}
@@ -101,6 +106,7 @@ revisionLoop:
 		glog.Info("Calling setRegexPatterns function")
 		greenRegex, yellowRegex, greyRegex := setRegexPatterns(i, box.Character, gridData)
 
+		//Revise the answerList based on the box color
 		switch box.Color {
 		case "green":
 			//Find matches for character in position
@@ -117,7 +123,8 @@ revisionLoop:
 		default:
 			//Invalid color, this should never be reached
 			glog.Errorf("Invalid color recieved: %v", box.Color)
-			solveError = fmt.Sprintf("Invalid color: %v", box.Color)
+			solvingError = fmt.Sprintf("Invalid color: %v", box.Color)
+			httpStatus = http.StatusBadRequest
 			glog.Error("Breaking revision loop")
 			break revisionLoop
 		}
@@ -133,6 +140,6 @@ revisionLoop:
 	var resultSummary string = fmt.Sprintf("Potential answers: %v\n", answerList.Count())
 	glog.Info("Writing results")
 	results := strings.Join(answerList.Words, " ")
-	glog.Info("Returning solve function")
-	return results, resultSummary, solveError
+	glog.Info("Returning solveWordle function")
+	return results, resultSummary, solvingError, httpStatus
 }
