@@ -1,15 +1,18 @@
 package main
 
 import (
+	"flag"
 	"fmt"
-	"github.com/gin-gonic/gin"
-	"github.com/golang/glog"
 	"net/http"
 	"os"
 	"strings"
+	"github.com/gin-gonic/gin"
+	"github.com/golang/glog"
 )
 
 func main() {
+
+	flag.Parse()
 
 	r := gin.Default()
 
