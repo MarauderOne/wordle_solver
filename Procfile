@@ -1,2 +1,2 @@
 // Used by Heroku for configuring dynos
-web: frontend -stderrthreshold=WARNING -logtostderr=true
+web: wordle_solver -stderrthreshold=WARNING -logtostderr=true
