@@ -53,16 +53,22 @@ document.addEventListener("DOMContentLoaded", function() {
             activeBox.value = '';  // Clear the contents of the active box
             activeBox.classList.remove('grey', 'yellow', 'green');
             sendGridState();
-            // Move focus to the previous box if it exists
-            const previousBox = activeBox.previousElementSibling;
-            if (previousBox && previousBox.classList.contains('box')) {
-                previousBox.focus();
-            }
         }
     }
 
+    // Function to handle clear soft-key press
+    function handleClearKeyPress(event) {
+        event.preventDefault();  // Prevent default behavior
+        document.querySelectorAll('.box').forEach(box => {
+            box.value = '';
+            box.classList.remove('grey', 'yellow', 'green');
+        });
+        activeBox = firstBox;
+        sendGridState();
+    }
+
     // Add event listeners to each keyboard button
-    const keyboardKeys = document.querySelectorAll('.keyboardKey:not(.keyboardKey[character="←"])');
+    const keyboardKeys = document.querySelectorAll('.keyboardKey:not(.keyboardKey[character="←"]):not(.keyboardKey[character="clear"])');
     keyboardKeys.forEach(key => {
         key.addEventListener('click', handleKeyPress);
     });
@@ -70,6 +76,10 @@ document.addEventListener("DOMContentLoaded", function() {
     // Add event listener to the delete key button
     const deleteKey = document.querySelector('.keyboardKey[character="←"]');
     deleteKey.addEventListener('click', handleDeleteKeyPress);
+
+    // Add event listener to the clear key button
+    const clearKey = document.querySelector('.keyboardKey[character="clear"]');
+    clearKey.addEventListener('click', handleClearKeyPress);
 
     // Track the last focused input box
     document.querySelectorAll('.box').forEach(box => {
