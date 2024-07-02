@@ -18,11 +18,11 @@ func main() {
 	webServer := gin.Default()
 
 	//Serve static files
-	webServer.Static("/static", "./static")
+	webServer.Static("/wordlesolver", "./frontend")
 
 	//Define routes
 	webServer.GET("/", func(c *gin.Context) {
-		c.File("./static/index.html")
+		c.File("./frontend/index.html")
 	})
 
 	//Endpoint to handle Wordle solving
