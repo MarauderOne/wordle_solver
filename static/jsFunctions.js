@@ -30,7 +30,7 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     }
 
-    // Function to handle delete key press
+    // Function to handle delete soft-key press
     function handleDeleteKeyPress(event) {
         event.preventDefault();  // Prevent default behavior
         if (activeBox) {
@@ -45,7 +45,6 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     }
 
-
     // Add event listeners to each keyboard button
     const keyboardKeys = document.querySelectorAll('.keyboardKey:not(.keyboardKey[character="←"])');
     keyboardKeys.forEach(key => {
@@ -55,6 +54,26 @@ document.addEventListener("DOMContentLoaded", function() {
     // Add event listener to the delete key button
     const deleteKey = document.querySelector('.keyboardKey[character="←"]');
     deleteKey.addEventListener('click', handleDeleteKeyPress);
+
+    // Track the last focused input box
+    document.querySelectorAll('.box').forEach(box => {
+        box.addEventListener('focus', (event) => {
+            activeBox = event.target;
+        });
+
+        // Add event listener for backspace key press (on physical keyboard)
+        box.addEventListener('keydown', (event) => {
+            if (event.key === 'Backspace' && box.value === '') {
+                event.preventDefault();  // Prevent default backspace behavior
+                activeBox.classList.remove('grey', 'yellow', 'green');
+                const previousBox = box.previousElementSibling;
+                if (previousBox && previousBox.classList.contains('box')) {
+                    previousBox.focus();
+                }
+                sendGridState();
+            }
+        });
+    });
 
     function limitInputToSingleChar(event) {
         const input = event.target;
