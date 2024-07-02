@@ -40,12 +40,30 @@
                     }
                 }
             }
+
+            // Function to handle delete key press
+            function handleDeleteKeyPress(event) {
+                event.preventDefault();  // Prevent default behavior
+                if (activeBox) {
+                    activeBox.value = '';  // Clear the contents of the active box
+                    // Move focus to the previous box if it exists
+                    const previousBox = activeBox.previousElementSibling;
+                    if (previousBox && previousBox.classList.contains('box')) {
+                        previousBox.focus();
+                    }
+                }
+            }
+        
         
             // Add event listeners to each keyboard button
-            const keyboardKeys = document.querySelectorAll('.keyboardKey');
+            const keyboardKeys = document.querySelectorAll('.keyboardKey:not(.keyboardKey[character="←"])');
             keyboardKeys.forEach(key => {
                 key.addEventListener('click', handleKeyPress);
             });
+
+            // Add event listener to the delete key button
+            const deleteKey = document.querySelector('.keyboardKey[character="←"]');
+            deleteKey.addEventListener('click', handleDeleteKeyPress);
         
             function limitInputToSingleChar(event) {
                 const input = event.target;
