@@ -147,7 +147,7 @@ func solveWordle(gridData []CellData) (result string, countOfResults int, solvin
 
 	if answerList.Count() == 5237 {
 		glog.Warning("After applying logic, answerList is still at maximum count")
-		solvingError = fmt.Sprint("Keep adding letters and colors to generate potential answers...")
+		solvingError = "Keep adding letters and colors to generate potential answers..."
 		httpStatus = http.StatusBadRequest
 		glog.Info("Writing results summary")
 		var resultCount int = answerList.Count()
