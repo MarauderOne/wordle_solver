@@ -35,6 +35,8 @@ document.addEventListener("DOMContentLoaded", function() {
         event.preventDefault();  // Prevent default behavior
         if (activeBox) {
             activeBox.value = '';  // Clear the contents of the active box
+            activeBox.classList.remove('grey', 'yellow', 'green');
+            sendGridState();
             // Move focus to the previous box if it exists
             const previousBox = activeBox.previousElementSibling;
             if (previousBox && previousBox.classList.contains('box')) {
