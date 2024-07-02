@@ -52,6 +52,10 @@ document.addEventListener("DOMContentLoaded", function() {
         if (activeBox) {
             activeBox.value = '';  // Clear the contents of the active box
             activeBox.classList.remove('grey', 'yellow', 'green');
+            const previousBox = activeBox.previousElementSibling;
+            if (previousBox && previousBox.classList.contains('box')) {
+                previousBox.focus();
+            }
             sendGridState();
         }
     }
@@ -73,11 +77,11 @@ document.addEventListener("DOMContentLoaded", function() {
         key.addEventListener('click', handleKeyPress);
     });
 
-    // Add event listener to the delete key button
+    // Add event listener to the delete soft-key button
     const deleteKey = document.querySelector('.keyboardKey[character="←"]');
     deleteKey.addEventListener('click', handleDeleteKeyPress);
 
-    // Add event listener to the clear key button
+    // Add event listener to the clear soft-key button
     const clearKey = document.querySelector('.keyboardKey[character="clear"]');
     clearKey.addEventListener('click', handleClearKeyPress);
 
