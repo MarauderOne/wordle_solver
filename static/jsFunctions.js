@@ -1,6 +1,22 @@
-let activeBox = null;
-
 document.addEventListener("DOMContentLoaded", function() {
+    let activeBox = null;
+
+    // Function to determine if the device is mobile
+    function isMobileDevice() {
+    return /Mobi|Android/i.test(navigator.userAgent);
+    }
+
+    // Apply readonly attribute to input fields on mobile devices
+    if (isMobileDevice()) {
+        document.querySelectorAll('.box').forEach(box => {
+            box.setAttribute('readonly', true);
+        });
+    } else {
+        document.querySelectorAll('.box').forEach(box => {
+            box.removeAttribute('readonly');
+        });
+    }
+
     // Focus the first box by default
     const firstBox = document.querySelector('.box');
     if (firstBox) {
