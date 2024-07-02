@@ -1,11 +1,11 @@
 @font-face {
     font-family: clearsans;
-    src: url(/static/fonts/clear-sans/TTF/ClearSans-Bold.ttf);
+    src: url(/wordlesolver/fonts/clear-sans/TTF/ClearSans-Bold.ttf);
 }
 
 @font-face {
     font-family: karnak;
-    src: url(/static/fonts/karnak_pro/KarnakPro-Medium_400.otf);
+    src: url(/wordlesolver/fonts/karnak_pro/KarnakPro-Medium_400.otf);
 }
 
 h1 {
@@ -20,6 +20,7 @@ h1 {
 h2 {
     width: 33ch;
     height: 100%;
+    max-width: 99%;
     font-family: clearsans;
     font-size: 20px;
     font-style: italic;
