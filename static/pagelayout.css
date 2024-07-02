@@ -1,0 +1,15 @@
+.pageGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.pageFrame {
+  text-align: center;
+}
+
+@media (max-width: 600px) {
+  .box {
+      font-size: 14px;
+  }
+}

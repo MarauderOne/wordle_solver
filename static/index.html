@@ -4,8 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Wordle Solver</title>
-    <link rel="stylesheet" href="./static/pagination.css">
-    <link rel="stylesheet" href="./static/styles.css">
+    <link rel="stylesheet" href="./static/pagelayout.css">
+    <link rel="stylesheet" href="/static/styles.css">
+    <link rel="stylesheet" href="/static/wordlestyles.css">
     <link rel="stylesheet" href="./static/keyboard.css">
     <script>
         let activeBox = null;
@@ -118,54 +119,53 @@
     </script>
 </head>
 <body>
-    <div>
-        <h1>
-            Wordle Solver
-            </h1>
-    </div>
-    <div>
-        <h2>
-            Enter your current Wordle guesses to find potential answers:
-        </h2>
-    </div>
-
-    <div class="split left">
-        <div class="centered">
-            <div class="grid centered">
-                <input type="text" class="box" maxlength="1">
-                <input type="text" class="box" maxlength="1" disabled>
-                <input type="text" class="box" maxlength="1" disabled>
-                <input type="text" class="box" maxlength="1" disabled>
-                <input type="text" class="box" maxlength="1" disabled>
-                <input type="text" class="box" maxlength="1" disabled>
-                <input type="text" class="box" maxlength="1" disabled>
-                <input type="text" class="box" maxlength="1" disabled>
-                <input type="text" class="box" maxlength="1" disabled>
-                <input type="text" class="box" maxlength="1" disabled>
-                <input type="text" class="box" maxlength="1" disabled>
-                <input type="text" class="box" maxlength="1" disabled>
-                <input type="text" class="box" maxlength="1" disabled>
-                <input type="text" class="box" maxlength="1" disabled>
-                <input type="text" class="box" maxlength="1" disabled>
-                <input type="text" class="box" maxlength="1" disabled>
-                <input type="text" class="box" maxlength="1" disabled>
-                <input type="text" class="box" maxlength="1" disabled>
-                <input type="text" class="box" maxlength="1" disabled>
-                <input type="text" class="box" maxlength="1" disabled>
-                <input type="text" class="box" maxlength="1" disabled>
-                <input type="text" class="box" maxlength="1" disabled>
-                <input type="text" class="box" maxlength="1" disabled>
-                <input type="text" class="box" maxlength="1" disabled>
-                <input type="text" class="box" maxlength="1" disabled>
-                <input type="text" class="box" maxlength="1" disabled>
-                <input type="text" class="box" maxlength="1" disabled>
-                <input type="text" class="box" maxlength="1" disabled>
-                <input type="text" class="box" maxlength="1" disabled>
-                <input type="text" class="box" maxlength="1" disabled>
-            </div>
-            <div class="grid centered">
-                <div class="keyboard centered">
-                    <div class="row">
+    <header>
+        <h1>Wordle Solver</h1>
+    </header>
+    <main>
+        <section class="pageGrid">
+            <div class="pageFrame">
+                <div>
+                    <h2>
+                        Enter your current Wordle guesses to find potential answers:
+                    </h2>
+                </div>
+                <div class="gridContainer">
+                <div class="grid">
+                    <input type="text" class="box" maxlength="1">
+                    <input type="text" class="box" maxlength="1" disabled>
+                    <input type="text" class="box" maxlength="1" disabled>
+                    <input type="text" class="box" maxlength="1" disabled>
+                    <input type="text" class="box" maxlength="1" disabled>
+                    <input type="text" class="box" maxlength="1" disabled>
+                    <input type="text" class="box" maxlength="1" disabled>
+                    <input type="text" class="box" maxlength="1" disabled>
+                    <input type="text" class="box" maxlength="1" disabled>
+                    <input type="text" class="box" maxlength="1" disabled>
+                    <input type="text" class="box" maxlength="1" disabled>
+                    <input type="text" class="box" maxlength="1" disabled>
+                    <input type="text" class="box" maxlength="1" disabled>
+                    <input type="text" class="box" maxlength="1" disabled>
+                    <input type="text" class="box" maxlength="1" disabled>
+                    <input type="text" class="box" maxlength="1" disabled>
+                    <input type="text" class="box" maxlength="1" disabled>
+                    <input type="text" class="box" maxlength="1" disabled>
+                    <input type="text" class="box" maxlength="1" disabled>
+                    <input type="text" class="box" maxlength="1" disabled>
+                    <input type="text" class="box" maxlength="1" disabled>
+                    <input type="text" class="box" maxlength="1" disabled>
+                    <input type="text" class="box" maxlength="1" disabled>
+                    <input type="text" class="box" maxlength="1" disabled>
+                    <input type="text" class="box" maxlength="1" disabled>
+                    <input type="text" class="box" maxlength="1" disabled>
+                    <input type="text" class="box" maxlength="1" disabled>
+                    <input type="text" class="box" maxlength="1" disabled>
+                    <input type="text" class="box" maxlength="1" disabled>
+                    <input type="text" class="box" maxlength="1" disabled>
+                </div>
+                </div>
+                <div class="keyboard ">
+                    <div class="keyboardRow">
                         <button type="button" character="q" class="keyboardKey">q</button>
                         <button type="button" character="w" class="keyboardKey">w</button>
                         <button type="button" character="e" class="keyboardKey">e</button>
@@ -177,7 +177,7 @@
                         <button type="button" character="o" class="keyboardKey">o</button>
                         <button type="button" character="p" class="keyboardKey">p</button>
                     </div>
-                    <div class="row">
+                    <div class="keyboardRow">
                         <div class="half"> </div>
                         <button type="button" character="a" class="keyboardKey">a</button>
                         <button type="button" character="s" class="keyboardKey">s</button>
@@ -190,7 +190,7 @@
                         <button type="button" character="l" class="keyboardKey">l</button>
                         <div class="half"> </div>
                     </div>
-                    <div class="row">
+                    <div class="keyboardRow">
                         <div class="oneAndAHalf"> </div> <!-- On normal Wordle this would be the Enter button -->
                         <button type="button" character="z" class="keyboardKey">z</button>
                         <button type="button" character="x" class="keyboardKey">x</button>
@@ -202,22 +202,21 @@
                         <button type="button" character="←" class="keyboardKey oneAndAHalf"><svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 0 24 24" width="20" class="game-icon" data-testid="icon-backspace"><path fill="var(--color-tone-1)" d="M22 3H7c-.69 0-1.23.35-1.59.88L0 12l5.41 8.11c.36.53.9.89 1.59.89h15c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H7.07L2.4 12l4.66-7H22v14zm-11.59-2L14 13.41 17.59 17 19 15.59 15.41 12 19 8.41 17.59 7 14 10.59 10.41 7 9 8.41 12.59 12 9 15.59z"></path></svg></button>
                     </div>
                 </div>
-            </div>
-        </div>
-      </div>
-      
-      <div class="split right">
-        <div class="centered">
-            <div class="answerbox centered">
-                <p>
-                    Potential answers: <span id="resultsCount" ></span>
-                </p>
-            <p id="results" ></p>
-        </div>
-        </div>
-      </div>
 
-    
-    
+
+            </div>
+            <div class="pageFrame">
+                <div class="answerbox">
+                    <p>
+                        Potential answers: <span id="resultsCount" ></span>
+                    </p>
+                    <p id="results" ></p>
+                </div>
+            </div>
+        </section>
+    </main>
+    <footer>
+        <a href="https://github.com/MarauderOne/wordle_solver/blob/main/README.md">How does it work?</a>
+    </footer>
 </body>
 </html>
