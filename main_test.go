@@ -65,9 +65,9 @@ func TestSolveWordle(t *testing.T) {
 		assert.NoError(t, err)
 
 		assert.NotEmpty(t, jsonResponse["result"])
-		assert.NotEmpty(t, jsonResponse["resultSummary"])
+		assert.NotEmpty(t, jsonResponse["resultCount"])
 		assert.Equal(t, "KNEAD", jsonResponse["result"])
-		assert.Equal(t, float64(1), jsonResponse["resultSummary"])
+		assert.Equal(t, float64(1), jsonResponse["resultCount"])
 	})
 
 	t.Run("Test grey box regex logic", func(t *testing.T) {
@@ -94,9 +94,9 @@ func TestSolveWordle(t *testing.T) {
 		assert.NoError(t, err)
 
 		assert.NotEmpty(t, jsonResponse["result"])
-		assert.NotEmpty(t, jsonResponse["resultSummary"])
+		assert.NotEmpty(t, jsonResponse["resultCount"])
 		assert.NotContains(t, jsonResponse["result"], "t")
-		assert.Equal(t, float64(3908), jsonResponse["resultSummary"])
+		assert.Equal(t, float64(3908), jsonResponse["resultCount"])
 	})
 
 	t.Run("Test invalid character input", func(t *testing.T) {

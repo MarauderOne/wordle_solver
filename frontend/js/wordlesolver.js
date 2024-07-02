@@ -157,7 +157,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 body: JSON.stringify(gridData)
             });
             const data = await response.json();
-            document.getElementById('resultsCount').innerText = data.resultSummary;
+            document.getElementById('resultsCount').innerText = data.resultCount;
             document.getElementById('results').innerText = data.result;
             if (data.error) {
                 throw document.getElementById('resultsCount').innerText = 0,

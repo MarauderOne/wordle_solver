@@ -69,7 +69,7 @@ func parseGuesses(c *gin.Context) {
 		// Respond with the result
 		glog.Info("Responding to the page with expected results")
 		glog.Flush()
-		c.JSON(httpStatus, gin.H{"result": result, "resultSummary": countOfResults})
+		c.JSON(httpStatus, gin.H{"result": result, "resultCount": countOfResults})
 	}
 }
 
@@ -92,7 +92,7 @@ func solveWordle(gridData []CellData) (result string, countOfResults int, solvin
 			solvingError = fmt.Sprintf("Invalid character: %v", box.Character)
 			httpStatus = http.StatusBadRequest
 			glog.Error("Breaking revision loop")
-			glog.Info("Writing results summary")
+			glog.Info("Writing results count")
 			var resultCount int = answerList.Count()
 			glog.Info("Writing results")
 			results := strings.Join(answerList.Words, " ")
@@ -130,7 +130,7 @@ func solveWordle(gridData []CellData) (result string, countOfResults int, solvin
 			solvingError = fmt.Sprintf("Invalid color: %v", box.Color)
 			httpStatus = http.StatusBadRequest
 			glog.Error("Breaking revision loop")
-			glog.Info("Writing results summary")
+			glog.Info("Writing results count")
 			var resultCount int = answerList.Count()
 			glog.Info("Writing results")
 			results := strings.Join(answerList.Words, " ")
@@ -140,7 +140,7 @@ func solveWordle(gridData []CellData) (result string, countOfResults int, solvin
 
 		//Break the loop if potential answers drop to 1 or fewer
 		if answerList.Count() <= 1 {
-			glog.Info("List of potential answers has reached 1 or fewer words, breaking revision loop")
+			glog.Info("Count of potential answers has reached 1 or fewer words, breaking revision loop")
 			break
 		}
 	}
@@ -149,7 +149,7 @@ func solveWordle(gridData []CellData) (result string, countOfResults int, solvin
 		glog.Warning("After applying logic, answerList is still at maximum count")
 		solvingError = "Keep adding letters and colors to generate potential answers..."
 		httpStatus = http.StatusBadRequest
-		glog.Info("Writing results summary")
+		glog.Info("Writing results count")
 		var resultCount int = answerList.Count()
 		glog.Info("Writing results")
 		results := strings.Join(answerList.Words, " ")
@@ -157,7 +157,7 @@ func solveWordle(gridData []CellData) (result string, countOfResults int, solvin
 		return results, resultCount, solvingError, httpStatus
 	}
 	
-	glog.Info("Writing results summary")
+	glog.Info("Writing results count")
 	var resultCount int = answerList.Count()
 	glog.Info("Writing results")
 	results := strings.Join(answerList.Words, " ")
