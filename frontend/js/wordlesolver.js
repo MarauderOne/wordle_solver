@@ -174,3 +174,60 @@ document.addEventListener("DOMContentLoaded", function() {
         box.addEventListener('click', () => changeBoxColor(box));
     });
 });
+
+function toggleTheme() {
+    var darkThemeToggleButton = document.getElementById("darkThemeToggleButton");
+    var headerNav = document.getElementById("headerNav");
+    var title = document.getElementById("title");
+    var body = document.getElementById("body");
+    var pageFrame = document.getElementById("pageFrame");
+    var boxes = document.getElementsByClassName("box");
+    var answerbox = document.getElementById("answerbox");
+    if (darkThemeToggleButton.className === "fa fa-toggle-off fa-2x") {
+        //Toggle the button
+        darkThemeToggleButton.className = "fa fa-toggle-on fa-2x";
+        darkThemeToggleButton.style.backgroundColor = "rgb(35, 35, 35)";
+        darkThemeToggleButton.style.color = "white";
+        //Header colours
+        headerNav.style.backgroundColor = "rgb(35, 35, 35)";
+        headerNav.style.color = "white";
+        //Change title colours
+        title.style.backgroundColor = "rgb(35, 35, 35)";
+        title.style.color = "white";
+        //Change background colour
+        body.style.backgroundColor = "rgb(35, 35, 35)";
+        //Change instructions colour
+        pageFrame.style.color = "white";
+        //Change box colours
+        for(var i = 0; i < boxes.length; i++) {
+            boxes[i].style.backgroundColor = "rgb(35, 35, 35)";
+            boxes[i].style.color = "white";
+        }
+        //Change answer box colours
+        answerbox.style.backgroundColor = "rgb(35, 35, 35)";
+        answerbox.style.color = "white";
+    } else {
+        //Toggle the button
+        darkThemeToggleButton.className = "fa fa-toggle-off fa-2x";
+        darkThemeToggleButton.style.backgroundColor = "white";
+        darkThemeToggleButton.style.color = "black";
+        //Header colours
+        headerNav.style.backgroundColor = "white";
+        headerNav.style.color = "black";
+        //Change title colours
+        title.style.backgroundColor = "white";
+        title.style.color = "black";
+        //Change background colour
+        body.style.backgroundColor = "white";
+        //Change instructions colour
+        pageFrame.style.color = "black";
+        //Change box colours
+        for(var i = 0; i < boxes.length; i++) {
+            boxes[i].style.backgroundColor = "white";
+            boxes[i].style.color = "black";
+        }
+        //Change answer box colours
+        answerbox.style.backgroundColor = "white";
+        answerbox.style.color = "black";
+    }
+}

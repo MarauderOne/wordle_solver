@@ -9,15 +9,27 @@
     <link rel="stylesheet" href="/wordlesolver/css/styles.css">
     <link rel="stylesheet" href="/wordlesolver/css/wordlestyles.css">
     <link rel="stylesheet" href="/wordlesolver/css/keyboard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <script src="/wordlesolver/js/wordlesolver.js" type="text/javascript"></script>
 </head>
-<body>
-    <header>
-        <h1>Wordle Solver</h1>
+<body id="body">
+    <header id="headerNav" class="headerNav">
+        <ul>
+            <li><a href="https://theberridge.com/">theberridge.com</a></li>
+            <li><a href="https://github.com/MarauderOne/wordle_solver/blob/main/README.md">About</a></li>
+        </ul>
+        <div class="darkThemeToggle">
+            <span><i class="fa fa-sun-o fa-2x"></i></span>
+            <span><button id="darkThemeToggleButton" class="fa fa-toggle-off fa-2x" onclick="toggleTheme()"></button></span>
+            <span><i class="fa fa-moon-o fa-2x"></i></span>
+        </div>
     </header>
+    <div id="title" class="title">
+        <h1>Wordle Solver</h1>
+    </div>
     <main>
         <section class="pageGrid">
-            <div class="pageFrame">
+            <div id="pageFrame" class="pageFrame">
                 <div>
                     <h2>
                         Enter your current Wordle guesses and click the boxes to set their returned colors:
@@ -25,36 +37,36 @@
                 </div>
                 <div class="gridContainer">
                 <div class="grid">
-                    <input type="text" class="box" maxlength="1" readonly>
-                    <input type="text" class="box" maxlength="1" readonly disabled>
-                    <input type="text" class="box" maxlength="1" readonly disabled>
-                    <input type="text" class="box" maxlength="1" readonly disabled>
-                    <input type="text" class="box" maxlength="1" readonly disabled>
-                    <input type="text" class="box" maxlength="1" readonly disabled>
-                    <input type="text" class="box" maxlength="1" readonly disabled>
-                    <input type="text" class="box" maxlength="1" readonly disabled>
-                    <input type="text" class="box" maxlength="1" readonly disabled>
-                    <input type="text" class="box" maxlength="1" readonly disabled>
-                    <input type="text" class="box" maxlength="1" readonly disabled>
-                    <input type="text" class="box" maxlength="1" readonly disabled>
-                    <input type="text" class="box" maxlength="1" readonly disabled>
-                    <input type="text" class="box" maxlength="1" readonly disabled>
-                    <input type="text" class="box" maxlength="1" readonly disabled>
-                    <input type="text" class="box" maxlength="1" readonly disabled>
-                    <input type="text" class="box" maxlength="1" readonly disabled>
-                    <input type="text" class="box" maxlength="1" readonly disabled>
-                    <input type="text" class="box" maxlength="1" readonly disabled>
-                    <input type="text" class="box" maxlength="1" readonly disabled>
-                    <input type="text" class="box" maxlength="1" readonly disabled>
-                    <input type="text" class="box" maxlength="1" readonly disabled>
-                    <input type="text" class="box" maxlength="1" readonly disabled>
-                    <input type="text" class="box" maxlength="1" readonly disabled>
-                    <input type="text" class="box" maxlength="1" readonly disabled>
-                    <input type="text" class="box" maxlength="1" readonly disabled>
-                    <input type="text" class="box" maxlength="1" readonly disabled>
-                    <input type="text" class="box" maxlength="1" readonly disabled>
-                    <input type="text" class="box" maxlength="1" readonly disabled>
-                    <input type="text" class="box" maxlength="1" readonly disabled>
+                    <input type="text" id="box" class="box" maxlength="1" readonly>
+                    <input type="text" id="box" class="box" maxlength="1" readonly disabled>
+                    <input type="text" id="box" class="box" maxlength="1" readonly disabled>
+                    <input type="text" id="box" class="box" maxlength="1" readonly disabled>
+                    <input type="text" id="box" class="box" maxlength="1" readonly disabled>
+                    <input type="text" id="box" class="box" maxlength="1" readonly disabled>
+                    <input type="text" id="box" class="box" maxlength="1" readonly disabled>
+                    <input type="text" id="box" class="box" maxlength="1" readonly disabled>
+                    <input type="text" id="box" class="box" maxlength="1" readonly disabled>
+                    <input type="text" id="box" class="box" maxlength="1" readonly disabled>
+                    <input type="text" id="box" class="box" maxlength="1" readonly disabled>
+                    <input type="text" id="box" class="box" maxlength="1" readonly disabled>
+                    <input type="text" id="box" class="box" maxlength="1" readonly disabled>
+                    <input type="text" id="box" class="box" maxlength="1" readonly disabled>
+                    <input type="text" id="box" class="box" maxlength="1" readonly disabled>
+                    <input type="text" id="box" class="box" maxlength="1" readonly disabled>
+                    <input type="text" id="box" class="box" maxlength="1" readonly disabled>
+                    <input type="text" id="box" class="box" maxlength="1" readonly disabled>
+                    <input type="text" id="box" class="box" maxlength="1" readonly disabled>
+                    <input type="text" id="box" class="box" maxlength="1" readonly disabled>
+                    <input type="text" id="box" class="box" maxlength="1" readonly disabled>
+                    <input type="text" id="box" class="box" maxlength="1" readonly disabled>
+                    <input type="text" id="box" class="box" maxlength="1" readonly disabled>
+                    <input type="text" id="box" class="box" maxlength="1" readonly disabled>
+                    <input type="text" id="box" class="box" maxlength="1" readonly disabled>
+                    <input type="text" id="box" class="box" maxlength="1" readonly disabled>
+                    <input type="text" id="box" class="box" maxlength="1" readonly disabled>
+                    <input type="text" id="box" class="box" maxlength="1" readonly disabled>
+                    <input type="text" id="box" class="box" maxlength="1" readonly disabled>
+                    <input type="text" id="box" class="box" maxlength="1" readonly disabled>
                 </div>
                 </div>
                 <div class="keyboard ">
@@ -99,7 +111,7 @@
 
             </div>
             <div class="pageFrame">
-                <div class="answerbox">
+                <div id="answerbox" class="answerbox">
                     <p>
                         Potential answers: <span id="resultsCount" ></span>
                     </p>
@@ -108,8 +120,5 @@
             </div>
         </section>
     </main>
-    <footer>
-        <a href="https://github.com/MarauderOne/wordle_solver/blob/main/README.md">How does it work?</a>
-    </footer>
 </body>
 </html>
