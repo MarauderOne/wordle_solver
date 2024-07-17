@@ -44,6 +44,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 nextBox.focus();
             }
         }
+        sendGridState();
     }
 
     // Function to handle delete soft-key press
