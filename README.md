@@ -2,11 +2,11 @@
 A Go powered web app for solving Wordle puzzles.
 
 ## Description
-The purpose of this app is to provide a webpage where users (who are stuck on today's Wordle problem) can enter their current guesses and receive a list of all the possible five-letter words that could potentially be the solution, after taking the characters and colors into account.
+The purpose of this app is to provide a webpage where users (who are stuck on today's Wordle problem) can enter their current guesses and receive a list of all the possible five-letter words that could potentially be the solution, after taking the characters and their colors into account.
 
-The user does by using the soft-keyboard on the page itself (or physical keyboard on desktop PCs) to enter the characters. They can then add the colors returned by Wordle by clicking on the box in each row.
+The user does this by using the soft-keyboard on the page itself (or physical keyboard on desktop PCs) to enter the characters. They can then add the colors returned by Wordle by clicking on the box in each row.
 
-The characters, colors and position of each box will then be computed in order to find all possible solutions to the puzzle (given the words that the current guesses have eliminated).
+The characters, their colors and position of each box will then be computed in order to find all possible solutions to the puzzle (given the words that the current guesses have eliminated).
 
 ## Isn't That Cheating Though?
 Oh, for _you_ it is, yes, absolutely. I mean, you're using a third-party tool to help you solve the Wordle. How can you sleep at night?
@@ -30,7 +30,7 @@ flowchart TD
     E([Return Error])
     H[Ignore slices where either\nthe character or color is blank]
     I["Determine position in row\n(First to Fifth)"]
-    J["Set regex pattern for Green box\n(Word contains this character any this position)"]
+    J["Set regex pattern for Green box\n(Word contains this character in this position)"]
     K["Set regex pattern for Yellow box\n(Word contains this character in any position except this one)"]
     L{"Does this\ncharacter exist\nanywhere else\nin the row?"}
     M["Set regex pattern for Grey box\n(Word does not contain this character in this position)"]
