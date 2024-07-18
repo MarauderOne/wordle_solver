@@ -70,6 +70,60 @@ func TestSolveWordle(t *testing.T) {
 		assert.Equal(t, float64(1), jsonResponse["resultCount"])
 	})
 
+	t.Run("Test ignoring blank values", func(t *testing.T) {
+		//Define a valid grid input
+		gridData := []CellData{
+			{Character: "N", Color: "yellow"},
+			{Character: "O", Color: "grey"},
+			{Character: "", Color: "grey"},
+			{Character: "V", Color: ""},
+			{Character: "", Color: "grey"},
+			{Character: "I", Color: ""},
+			{Character: "", Color: "grey"},
+		}
+
+		jsonData, _ := json.Marshal(gridData)
+		req, _ := http.NewRequest(http.MethodPost, "/guesses", bytes.NewBuffer(jsonData))
+		req.Header.Set("Content-Type", "application/json")
+
+		httpResponse := httptest.NewRecorder()
+		webServer.ServeHTTP(httpResponse, req)
+
+		assert.Equal(t, http.StatusOK, httpResponse.Code)
+
+		var jsonResponse map[string]interface{}
+		err := json.Unmarshal(httpResponse.Body.Bytes(), &jsonResponse)
+		assert.NoError(t, err)
+
+		assert.NotEmpty(t, jsonResponse["result"])
+		assert.NotEmpty(t, jsonResponse["resultCount"])
+		assert.Contains(t, jsonResponse["result"], "ACING")
+		assert.Equal(t, float64(699), jsonResponse["resultCount"])
+	})
+
+	t.Run("Test remaining solutions at max", func(t *testing.T) {
+				//Define a valid grid input
+				gridData := []CellData{
+					{Character: "Q", Color: ""},
+				}
+		
+				jsonData, _ := json.Marshal(gridData)
+				req, _ := http.NewRequest(http.MethodPost, "/guesses", bytes.NewBuffer(jsonData))
+				req.Header.Set("Content-Type", "application/json")
+		
+				httpResponse := httptest.NewRecorder()
+				webServer.ServeHTTP(httpResponse, req)
+		
+				assert.Equal(t, http.StatusBadRequest, httpResponse.Code)
+		
+				var jsonResponse map[string]interface{}
+				err := json.Unmarshal(httpResponse.Body.Bytes(), &jsonResponse)
+				assert.NoError(t, err)
+		
+				assert.NotEmpty(t, jsonResponse["error"])
+				assert.Equal(t, "Keep adding letters and colors to generate potential answers...", jsonResponse["error"])
+	})
+
 	t.Run("Test grey box regex logic", func(t *testing.T) {
 		//Define a valid grid input
 		gridData := []CellData{
