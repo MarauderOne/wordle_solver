@@ -18,7 +18,7 @@ func TestCreateNewAnswerList(t *testing.T) {
 
 func TestSetRegexPatterns(t *testing.T) {
 
-	t.Run("Test simple logic", func(t *testing.T) {
+	t.Run("Test simple green logic", func(t *testing.T) {
 	//Define a valid grid input
 	gridData := []CellData{
 		{Character: "A", Color: "green"},
@@ -27,33 +27,75 @@ func TestSetRegexPatterns(t *testing.T) {
 		{Character: "", Color: ""},
 		{Character: "", Color: ""},
 	}
-	greenRegex, yellowRegex, greyRegex := setRegexPatterns(0, "A", gridData)
+	singleLetterRegexPattern := setSingleLetterRegexPattern(0, "A", gridData)
 
-	assert.NotEmpty(t, greenRegex)
-	assert.Equal(t, "A....", greenRegex)
-	assert.NotEmpty(t, yellowRegex)
-	assert.Equal(t, "[^A][A{1,}]...$|^[^A].[A{1,}]..$|^[^A]..[A{1,}].$|^[^A]...[A{1,}]", yellowRegex)
-	assert.NotEmpty(t, greyRegex)
-	assert.Equal(t, "[^A]*", greyRegex)
+	assert.NotEmpty(t, singleLetterRegexPattern)
+	assert.Equal(t, "A....", singleLetterRegexPattern)
 	})
+
+	t.Run("Test simple yellow logic", func(t *testing.T) {
+		//Define a valid grid input
+		gridData := []CellData{
+			{Character: "A", Color: "yellow"},
+			{Character: "", Color: ""},
+			{Character: "", Color: ""},
+			{Character: "", Color: ""},
+			{Character: "", Color: ""},
+		}
+		singleLetterRegexPattern := setSingleLetterRegexPattern(0, "A", gridData)
+	
+		assert.NotEmpty(t, singleLetterRegexPattern)
+		assert.Equal(t, "[^A].*[A{1,4}].*", singleLetterRegexPattern)
+		})
+
+	t.Run("Test simple grey logic", func(t *testing.T) {
+		//Define a valid grid input
+		gridData := []CellData{
+			{Character: "A", Color: "grey"},
+			{Character: "", Color: ""},
+			{Character: "", Color: ""},
+			{Character: "", Color: ""},
+			{Character: "", Color: ""},
+		}
+		singleLetterRegexPattern := setSingleLetterRegexPattern(0, "A", gridData)
+	
+		assert.NotEmpty(t, singleLetterRegexPattern)
+		assert.Equal(t, "[^A]....", singleLetterRegexPattern)
+		})
+
+	t.Run("Test complex yellow logic", func(t *testing.T) {
+		//Define a valid grid input
+		gridData := []CellData{
+			{Character: "I", Color: "grey"},
+			{Character: "R", Color: "grey"},
+			{Character: "A", Color: "grey"},
+			{Character: "T", Color: "grey"},
+			{Character: "E", Color: "yellow"},
+			{Character: "S", Color: "grey"},
+			{Character: "L", Color: "yellow"},
+			{Character: "E", Color: "green"},
+			{Character: "E", Color: "yellow"},
+			{Character: "P", Color: "grey"},
+		}
+		multiLetterRegexPattern := setMultiLetterRegexPattern(7, "E", gridData)
+
+		assert.NotEmpty(t, multiLetterRegexPattern)
+		assert.Equal(t, ".*[E{1,2}].*E[^E].$|^..E[^E]E", multiLetterRegexPattern)
+		})
 
 	t.Run("Test complex grey logic", func(t *testing.T) {
 		//Define a valid grid input
 		gridData := []CellData{
+			{Character: "I", Color: "yellow"},
+			{Character: "R", Color: "yellow"},
+			{Character: "A", Color: "green"},
 			{Character: "T", Color: "grey"},
-			{Character: "T", Color: "grey"},
-			{Character: "T", Color: "grey"},
-			{Character: "T", Color: "grey"},
-			{Character: "T", Color: "grey"},
+			{Character: "E", Color: "yellow"},
 		}
-		greenRegex, yellowRegex, greyRegex := setRegexPatterns(0, "T", gridData)
-	
-		assert.NotEmpty(t, greenRegex)
-		assert.Equal(t, "T....", greenRegex)
-		assert.NotEmpty(t, yellowRegex)
-		assert.Equal(t, "[^T][T{1,}]...$|^[^T].[T{1,}]..$|^[^T]..[T{1,}].$|^[^T]...[T{1,}]", yellowRegex)
-		assert.NotEmpty(t, greyRegex)
-		assert.Equal(t, "[^T]....", greyRegex)
+		multiLetterRegexPattern := setMultiLetterRegexPattern(3, "T", gridData)
+
+		assert.NotEmpty(t, multiLetterRegexPattern)
+		assert.Equal(t, "[^T]*", multiLetterRegexPattern)
 		})
 }
 
