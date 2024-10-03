@@ -23,103 +23,551 @@ func createNewAnswerList() (dictionary *dictionary_tools.MySimpleDict) {
 	return newDictionary
 }
 
-//Define a function to set regex patterns for the Lookup method used in the reviseAnswerList function
-func setRegexPatterns(i int, char string, gridData []CellData) (greenRegex, yellowRegex, greyRegex string) {
+//Define a function to set a regex pattern for the Lookup method used in the reviseAnswerList function
+//Specifically, these regex patterns relate to the character & color of the supplied box without regard for the rest of the word
+func setSingleLetterRegexPattern(i int, char string, gridData []CellData) (singleLetterRegexPattern string) {
 	//Assign position based on index number in the array (i)
 	switch i {
 	case 0, 5, 10, 15, 20, 25:
 		//Character in first position
-		glog.Info("Set greenRegex pattern for the first position")
-		greenRegex = fmt.Sprintf("%v....", char)
-		glog.Info("Set yellowRegex pattern for the first position")
-		yellowRegex = fmt.Sprintf("[^%v][%v{1,}]...$|^[^%v].[%v{1,}]..$|^[^%v]..[%v{1,}].$|^[^%v]...[%v{1,}]", char, char, char, char, char, char, char, char)
-
-		if (gridData[i+1].Character != char) && (gridData[i+2].Character != char) && (gridData[i+3].Character != char) && (gridData[i+4].Character != char) {
-			//If the letter is grey and does not exist in any other position in the word then we can eliminate words which contain that letter anywhere
-			glog.Info("Set greyRegex pattern for the first position (where there are no matching characters in the rest of the word)")
-			greyRegex = fmt.Sprintf("[^%v]*", char)
+		if (gridData[i].Color == "green") {
+			//Character is green
+			glog.Info("Set green singleLetterRegexPattern for the first position")
+			singleLetterRegexPattern = fmt.Sprintf("%v....", char)
+		} else if (gridData[i].Color == "yellow") {
+			//Character is yellow
+			glog.Info("Set yellow singleLetterRegexPattern for the first position")
+			singleLetterRegexPattern = fmt.Sprintf("[^%v].*[%v{1,4}].*", char, char)
 		} else {
-			//Just eliminate words with this character in the current position
-			glog.Info("Set greyRegex pattern for the first position (exclude words with this character in this position only)")
-			greyRegex = fmt.Sprintf("[^%v]....", char)
-			//This solution is not perfect as it does not account for cases where there is a grey "A" (for example), and one or more green "A"s
-			//ToDo: Implement an efficient method of determining which positions have common characters, then write a regex patter to keep words for the green positions and delete any other occurrences of that character
+			//Character is grey
+			glog.Info("Set grey singleLetterRegexPattern for the first position")
+			singleLetterRegexPattern = fmt.Sprintf("[^%v]....", char)
 		}
 
 	case 1, 6, 11, 16, 21, 26:
 		//Character in second position
-		glog.Info("Set greenRegex pattern for the second position")
-		greenRegex = fmt.Sprintf(".%v...", char)
-		glog.Info("Set yellowRegex pattern for the second position")
-		yellowRegex = fmt.Sprintf("[%v{1,}][^%v]...$|^.[^%v][%v{1,}]..$|^.[^%v].[%v{1,}].$|^.[^%v]..[%v{1,}]", char, char, char, char, char, char, char, char)
-		if (gridData[i-1].Character != char) && (gridData[i+1].Character != char) && (gridData[i+2].Character != char) && (gridData[i+3].Character != char) {
-			//If the letter is grey and does not exist in any other position in the word then we can eliminate words which contain that letter anywhere
-			glog.Info("Set greyRegex pattern for the second position (where there are no matching characters in the rest of the word)")
-			greyRegex = fmt.Sprintf("[^%v]*", char)
+		if (gridData[i].Color == "green") {
+			//Character is green
+			glog.Info("Set green singleLetterRegexPattern for the second position")
+			singleLetterRegexPattern = fmt.Sprintf(".%v...", char)
+		} else if (gridData[i].Color == "yellow") {
+			//Character is yellow
+			glog.Info("Set yellow singleLetterRegexPattern for the second position")
+			singleLetterRegexPattern = fmt.Sprintf("%v[^%v]...$|^.[^%v].*[%v{1,3}].*", char, char, char, char)
 		} else {
-			//Just eliminate words with this character in the current position
-			glog.Info("Set greyRegex pattern for the second position (exclude words with this character in this position only)")
-			greyRegex = fmt.Sprintf(".[^%v]...", char)
-			//This solution is not perfect as it does not account for cases where there is a grey "A" (for example), and one or more green "A"s
-			//ToDo: Implement an efficient method of determining which positions have common characters, then write a regex patter to keep words for the green positions and delete any other occurrences of that character
+			//Character is grey
+			glog.Info("Set grey singleLetterRegexPattern for the second position")
+			singleLetterRegexPattern = fmt.Sprintf(".[^%v]...", char)
 		}
 
 	case 2, 7, 12, 17, 22, 27:
 		//Character in third position
-		glog.Info("Set greenRegex pattern for the third position")
-		greenRegex = fmt.Sprintf("..%v..", char)
-		glog.Info("Set yellowRegex pattern for the third position")
-		yellowRegex = fmt.Sprintf("[%v{1,}].[^%v]..$|^.[%v{1,}][^%v]..$|^..[^%v][%v{1,}].$|^..[^%v].[%v{1,}]", char, char, char, char, char, char, char, char)
-		if (gridData[i-2].Character != char) && (gridData[i-1].Character != char) && (gridData[i+1].Character != char) && (gridData[i+2].Character != char) {
-			//If the letter is grey and does not exist in any other position in the word then we can eliminate words which contain that letter anywhere
-			glog.Info("Set greyRegex pattern for the third position (where there are no matching characters in the rest of the word)")
-			greyRegex = fmt.Sprintf("[^%v]*", char)
+		if (gridData[i].Color == "green") {
+			//Character is green
+			glog.Info("Set green singleLetterRegexPattern for the third position")
+			singleLetterRegexPattern = fmt.Sprintf("..%v..", char)
+		} else if (gridData[i].Color == "yellow") {
+			//Character is yellow
+			glog.Info("Set yellow singleLetterRegexPattern for the third position")
+			singleLetterRegexPattern = fmt.Sprintf(".*[%v{1,2}].*[^%v]..$|^..[^%v].*[%v{1,2}].*", char, char, char, char)
 		} else {
-			//Just eliminate words with this character in the current position
-			glog.Info("Set greyRegex pattern for the third position (exclude words with this character in this position only)")
-			greyRegex = fmt.Sprintf("..[^%v]..", char)
-			//This solution is not perfect as it does not account for cases where there is a grey "A" (for example), and one or more green "A"s
-			//ToDo: Implement an efficient method of determining which positions have common characters, then write a regex patter to keep words for the green positions and delete any other occurrences of that character
+			//Character is grey
+			glog.Info("Set grey singleLetterRegexPattern for the third position")
+			singleLetterRegexPattern = fmt.Sprintf("..[^%v]..", char)
 		}
 
 	case 3, 8, 13, 18, 23, 28:
 		//Character in fourth position
-		glog.Info("Set greenRegex pattern for the fourth position")
-		greenRegex = fmt.Sprintf("...%v.", char)
-		glog.Info("Set yellowRegex pattern for the fourth position")
-		yellowRegex = fmt.Sprintf("[%v{1,}]..[^%v].$|^.[%v{1,}].[^%v].$|^..[%v{1,}][^%v].$|^...[^%v][%v{1,}]", char, char, char, char, char, char, char, char)
-		if (gridData[i-3].Character != char) && (gridData[i-2].Character != char) && (gridData[i-1].Character != char) && (gridData[i+1].Character != char) {
-			//If the letter is grey and does not exist in any other position in the word then we can eliminate words which contain that letter anywhere
-			glog.Info("Set greyRegex pattern for the fourth position (where there are no matching characters in the rest of the word)")
-			greyRegex = fmt.Sprintf("[^%v]*", char)
+		if (gridData[i].Color == "green") {
+			//Character is green
+			glog.Info("Set green singleLetterRegexPattern for the fourth position")
+			singleLetterRegexPattern = fmt.Sprintf("...%v.", char)
+		} else if (gridData[i].Color == "yellow") {
+			//Character is yellow
+			glog.Info("Set yellow singleLetterRegexPattern for the fourth position")
+			singleLetterRegexPattern = fmt.Sprintf(".*[%v{1,3}].*[^%v].$|^...[^%v]%v", char, char, char, char)
 		} else {
-			//Just eliminate words with this character in the current position
-			glog.Info("Set greyRegex pattern for the fourth position (exclude words with this character in this position only)")
-			greyRegex = fmt.Sprintf("...[^%v].", char)
-			//This solution is not perfect as it does not account for cases where there is a grey "A" (for example), and one or more green "A"s
-			//ToDo: Implement an efficient method of determining which positions have common characters, then write a regex patter to keep words for the green positions and delete any other occurrences of that character
+			//Character is grey
+			glog.Info("Set grey singleLetterRegexPattern for the fourth position")
+			singleLetterRegexPattern = fmt.Sprintf("...[^%v].", char)
 		}
 
 	case 4, 9, 14, 19, 24, 29:
 		//Character in fifth position
-		glog.Info("Set greenRegex pattern for the fifth position")
-		greenRegex = fmt.Sprintf("....%v", char)
-		glog.Info("Set yellowRegex pattern for the fifth position")
-		yellowRegex = fmt.Sprintf("[%v{1,}]...[^%v]$|^.[%v{1,}]..[^%v]$|^..[%v{1,}].[^%v]$|^...[%v{1,}][^%v]", char, char, char, char, char, char, char, char)
-		if (gridData[i-4].Character != char) && (gridData[i-3].Character != char) && (gridData[i-2].Character != char) && (gridData[i-1].Character != char) {
-			//If the letter is grey and does not exist in any other position in the word then we can eliminate words which contain that letter anywhere
-			glog.Info("Set greyRegex pattern for the fifth position (where there are no matching characters in the rest of the word)")
-			greyRegex = fmt.Sprintf("[^%v]*", char)
+		if (gridData[i].Color == "green") {
+			//Character is green
+			glog.Info("Set green singleLetterRegexPattern for the fourth position")
+			singleLetterRegexPattern = fmt.Sprintf("....%v", char)
+		} else if (gridData[i].Color == "yellow") {
+			//Character is yellow
+			glog.Info("Set yellow singleLetterRegexPattern for the fifth position")
+			singleLetterRegexPattern = fmt.Sprintf(".*[%v{1,4}].*[^%v]", char, char)
 		} else {
-			//Just eliminate words with this character in the current position
-			glog.Info("Set greyRegex pattern for the fifth position (exclude words with this character in this position only)")
-			greyRegex = fmt.Sprintf("....[^%v]", char)
-			//This solution is not perfect as it does not account for cases where there is a grey "A" (for example), and one or more green "A"s
-			//ToDo: Implement an efficient method of determining which positions have common characters, then write a regex patter to keep words for the green positions and delete any other occurrences of that character
+			//Character is grey
+			glog.Info("Set grey singleLetterRegexPattern for the fifth position")
+			singleLetterRegexPattern = fmt.Sprintf("....[^%v]", char)
 		}
 	}
-	glog.Info("Returning setRegexPatterns function")
-	return greenRegex, yellowRegex, greyRegex
+	glog.Info("Returning setRegexPattern function")
+	return singleLetterRegexPattern
+}
+
+//Define a function to set regex patterns for the Lookup method used in the reviseAnswerList function
+//Specifically, these regex patterns relate to how the relationships between different colors of matching characters can tells us things about the whole word (i.e. more complicated logic)
+func setMultiLetterRegexPattern(i int, char string, gridData []CellData) (multiLetterRegexPattern string) {
+
+	//Initialise array, so that we can return multiple patterns as a single variable
+	regexPatternArray := []string{}
+
+	//Assign position based on index number in the array (i)
+	switch i {
+	case 0, 5, 10, 15, 20, 25:
+		//Character in first position
+		if (gridData[i].Color == "green") {
+			//Character is green
+
+			if ((gridData[i+1].Character == char) && (gridData[i+1].Color == "grey")) {
+				//Character is green with matching grey in the second position
+				regexPatternArray = append(regexPatternArray, fmt.Sprintf("%v[^%v]...", char, char))
+			}
+
+			if ((gridData[i+2].Character == char) && (gridData[i+2].Color == "grey")) {
+				//Character is green with matching grey in the third position
+				regexPatternArray = append(regexPatternArray, fmt.Sprintf("%v.[^%v]..", char, char))
+			}
+
+			if ((gridData[i+3].Character == char) && (gridData[i+3].Color == "grey")) {
+				//Character is green with matching grey in the fourth position
+				regexPatternArray = append(regexPatternArray, fmt.Sprintf("%v..[^%v].", char, char))
+			}
+
+			if ((gridData[i+4].Character == char) && (gridData[i+4].Color == "grey")) {
+				//Character is green with matching grey in the fifth position
+				regexPatternArray = append(regexPatternArray, fmt.Sprintf("%v...[^%v]", char, char))
+			}
+
+			if ((gridData[i+1].Character == char) && (gridData[i+1].Color == "yellow")) {
+				//Character is green with matching yellow in the second position
+				regexPatternArray = append(regexPatternArray, fmt.Sprintf("%v[^%v].*[%v{1,3}].*", char, char, char))
+			}
+
+			if ((gridData[i+2].Character == char) && (gridData[i+2].Color == "yellow")) {
+				//Character is green with matching yellow in the third position
+				regexPatternArray = append(regexPatternArray, fmt.Sprintf("%v%v[^%v]..$|^%v[^%v].*[%v{1,2}].*", char, char, char, char, char, char))
+			}
+
+			if ((gridData[i+3].Character == char) && (gridData[i+3].Color == "yellow")) {
+				//Character is green with matching yellow in the fourth position
+				regexPatternArray = append(regexPatternArray, fmt.Sprintf("%v.*[%v{1,2}].*[^%v].$|^%v..[^%v]%v", char, char, char, char, char, char))
+			}
+
+			if ((gridData[i+4].Character == char) && (gridData[i+4].Color == "yellow")) {
+				//Character is green with matching yellow in the fifth position
+				regexPatternArray = append(regexPatternArray, fmt.Sprintf("%v.*[%v{1,4}].*[^%v]", char, char, char))
+			}
+
+		} else if (gridData[i].Color == "yellow") {
+			//Character is yellow
+			
+			if ((gridData[i+1].Character == char) && (gridData[i+1].Color == "green")) {
+				//Character is yellow with matching green in the second position
+				regexPatternArray = append(regexPatternArray, fmt.Sprintf("[^%v]%v.*[%v{1,3}].*", char, char, char))
+			}
+
+			if ((gridData[i+2].Character == char) && (gridData[i+2].Color == "green")) {
+				//Character is yellow with matching green in the third position
+				regexPatternArray = append(regexPatternArray, fmt.Sprintf("[^%v]%v%v..$|^[^%v].%v.*[%v{1,2}].*", char, char, char, char, char, char))
+			}
+
+			if ((gridData[i+3].Character == char) && (gridData[i+3].Color == "green")) {
+				//Character is yellow with matching green in the fourth position
+				regexPatternArray = append(regexPatternArray, fmt.Sprintf("[^%v].*[%v{1,2}].*%v.$|^[^%v]..%v%v", char, char, char, char, char, char))
+			}
+
+			if ((gridData[i+4].Character == char) && (gridData[i+4].Color == "green")) {
+				//Character is yellow with matching green in the fifth position
+				regexPatternArray = append(regexPatternArray, fmt.Sprintf("[^%v].*[%v{1,3}].*%v", char, char, char))
+			}
+
+			if ((gridData[i+1].Character == char) && (gridData[i+1].Color == "yellow")) {
+				//Character is yellow with matching yellow in the second position
+				regexPatternArray = append(regexPatternArray, fmt.Sprintf("[^%v][^%v].*[%v{2,3}].*", char, char, char))
+			}
+
+			if ((gridData[i+2].Character == char) && (gridData[i+2].Color == "yellow")) {
+				//Character is yellow with matching yellow in the third position
+				regexPatternArray = append(regexPatternArray, fmt.Sprintf("[^%v]%v[^%v].*[%v{1,2}].*$|^[^%v].[^%v]%v%v", char, char, char, char, char, char, char, char))
+			}
+
+			if ((gridData[i+3].Character == char) && (gridData[i+3].Color == "yellow")) {
+				//Character is yellow with matching yellow in the fourth position
+				regexPatternArray = append(regexPatternArray, fmt.Sprintf("[^%v]%v%v[^%v].$|^[^%v].*[%v{1,2}].*[^%v]%v", char, char, char, char, char, char, char, char))
+			}
+
+			if ((gridData[i+4].Character == char) && (gridData[i+4].Color == "yellow")) {
+				//Character is yellow with matching yellow in the fifth position
+				regexPatternArray = append(regexPatternArray, fmt.Sprintf("[^%v].*[%v{2,3}].*[^%v]", char, char, char))
+			}
+
+			if ((gridData[i+1].Character == char) && (gridData[i+1].Color == "grey")) {
+				//Character is yellow with matching grey in the second position
+				regexPatternArray = append(regexPatternArray, fmt.Sprintf("[^%v][^%v].*[%v{1,3}].*", char, char, char))
+			}
+
+			if ((gridData[i+2].Character == char) && (gridData[i+2].Color == "grey")) {
+				//Character is yellow with matching grey in the third position
+				regexPatternArray = append(regexPatternArray, fmt.Sprintf("[^%v]%v[^%v]..$|^[^%v].[^%v].*[%v{1,2}].*", char, char, char, char, char, char))
+			}
+
+			if ((gridData[i+3].Character == char) && (gridData[i+3].Color == "grey")) {
+				//Character is yellow with matching grey in the fourth position
+				regexPatternArray = append(regexPatternArray, fmt.Sprintf("[^%v].*[%v{1,2}].*[^%v].$|^[^%v]..[^%v]%v", char, char, char, char, char, char))
+			}
+
+			if ((gridData[i+4].Character == char) && (gridData[i+4].Color == "grey")) {
+				//Character is yellow with matching grey in the fifth position
+				regexPatternArray = append(regexPatternArray, fmt.Sprintf("[^%v].*[%v{1,3}].*[^%v]", char, char, char))
+			}
+
+		} else {
+			//Character is grey
+
+			if (gridData[i+1].Character != char) && (gridData[i+2].Character != char) && (gridData[i+3].Character != char) && (gridData[i+4].Character != char) {
+				//Character is grey with no matching characters in the rest of the word
+				regexPatternArray = append(regexPatternArray, fmt.Sprintf("[^%v]*", char))
+			}
+
+			if ((gridData[i+1].Character == char) && (gridData[i+1].Color == "green")) {
+				//Character is grey with matching green in the second position
+				regexPatternArray = append(regexPatternArray, fmt.Sprintf("[^%v]%v...", char, char))
+			}
+
+			if ((gridData[i+2].Character == char) && (gridData[i+2].Color == "green")) {
+				//Character is grey with matching green in the third position
+				regexPatternArray = append(regexPatternArray, fmt.Sprintf("[^%v].%v..", char, char))
+			}
+
+			if ((gridData[i+3].Character == char) && (gridData[i+3].Color == "green")) {
+				//Character is grey with matching green in the fourth position
+				regexPatternArray = append(regexPatternArray, fmt.Sprintf("[^%v]..%v.", char, char))
+			}
+
+			if ((gridData[i+4].Character == char) && (gridData[i+4].Color == "green")) {
+				//Character is grey with matching green in the fifth position
+				regexPatternArray = append(regexPatternArray, fmt.Sprintf("[^%v]...%v", char, char))
+			}
+
+			if ((gridData[i+1].Character == char) && (gridData[i+1].Color == "yellow")) {
+				//Character is grey with matching yellow in the second position
+				regexPatternArray = append(regexPatternArray, fmt.Sprintf("[^%v][^%v].*[%v{1,3}].*", char, char, char))
+			}
+
+			if ((gridData[i+2].Character == char) && (gridData[i+2].Color == "yellow")) {
+				//Character is grey with matching yellow in the third position
+				regexPatternArray = append(regexPatternArray, fmt.Sprintf("[^%v]%v[^%v]..$|^[^%v].[^%v].*[%v{1,2}].*", char, char, char, char, char, char))
+			}
+
+			if ((gridData[i+3].Character == char) && (gridData[i+3].Color == "yellow")) {
+				//Character is grey with matching yellow in the fourth position
+				regexPatternArray = append(regexPatternArray, fmt.Sprintf("[^%v].*[%v{1,2}].*[^%v].$|^[^%v]..[^%v]%v", char, char, char, char, char, char))
+			}
+
+			if ((gridData[i+4].Character == char) && (gridData[i+4].Color == "yellow")) {
+				//Character is grey with matching yellow in the fifth position
+				regexPatternArray = append(regexPatternArray, fmt.Sprintf("[^%v].*[%v{1,3}].*[^%v]", char, char, char))
+			}
+		}
+
+	case 1, 6, 11, 16, 21, 26:
+		//Character in second position
+		if (gridData[i].Color == "green") {
+			//Character is green
+
+			if ((gridData[i+1].Character == char) && (gridData[i+1].Color == "grey")) {
+				//Character is green with matching grey in the third position
+				regexPatternArray = append(regexPatternArray, fmt.Sprintf(".%v[^%v]..", char, char))
+			}
+
+			if ((gridData[i+2].Character == char) && (gridData[i+2].Color == "grey")) {
+				//Character is green with matching grey in the fourth position
+				regexPatternArray = append(regexPatternArray, fmt.Sprintf(".%v.[^%v].", char, char))
+			}
+
+			if ((gridData[i+3].Character == char) && (gridData[i+3].Color == "grey")) {
+				//Character is green with matching grey in the fifth position
+				regexPatternArray = append(regexPatternArray, fmt.Sprintf(".%v..[^%v]", char, char))
+			}
+
+			if ((gridData[i+1].Character == char) && (gridData[i+1].Color == "yellow")) {
+				//Character is green with matching yellow in the third position
+				regexPatternArray = append(regexPatternArray, fmt.Sprintf("%v%v[^%v]..$|^.%v[^%v].*[%v{1,2}].*", char, char, char, char, char, char))
+			}
+
+			if ((gridData[i+2].Character == char) && (gridData[i+2].Color == "yellow")) {
+				//Character is green with matching yellow in the fourth position
+				regexPatternArray = append(regexPatternArray, fmt.Sprintf("%v%v.[^%v].$|^.%v%v.[^%v].$|^.%v.[^%v]%v", char, char, char, char, char, char, char, char, char))
+			}
+
+			if ((gridData[i+3].Character == char) && (gridData[i+3].Color == "yellow")) {
+				//Character is green with matching yellow in the fifth position
+				regexPatternArray = append(regexPatternArray, fmt.Sprintf("%v%v..[^%v]$|^.%v.*[%v{1,2}].*[^%v]", char, char, char, char, char, char))
+			}
+
+		} else if (gridData[i].Color == "yellow") {
+			//Character is yellow
+
+			if ((gridData[i+1].Character == char) && (gridData[i+1].Color == "green")) {
+				//Character is yellow with matching green in the third position
+				regexPatternArray = append(regexPatternArray, fmt.Sprintf("%v[^%v]%v..$|^.[^%v]%v.*[%v{1,2}].*", char, char, char, char, char, char))
+			}
+
+			if ((gridData[i+2].Character == char) && (gridData[i+2].Color == "green")) {
+				//Character is yellow with matching green in the fourth position
+				regexPatternArray = append(regexPatternArray, fmt.Sprintf("%v[^%v].%v.$|^.[^%v]%v%v.$|^.[^%v].%v%v", char, char, char, char, char, char, char, char, char))
+			}
+
+			if ((gridData[i+3].Character == char) && (gridData[i+3].Color == "green")) {
+				//Character is yellow with matching green in the fifth position
+				regexPatternArray = append(regexPatternArray, fmt.Sprintf("%v[^%v]..%v$|^.[^%v].*[%v{1,2}].*%v", char, char, char, char, char, char))
+			}
+
+			if ((gridData[i+1].Character == char) && (gridData[i+1].Color == "yellow")) {
+				//Character is yellow with matching yellow in the third position
+				regexPatternArray = append(regexPatternArray, fmt.Sprintf("%v[^%v][^%v].*[%v{1,2}].*$|^.[^%v][^%v]%v%v", char, char, char, char, char, char, char, char))
+			}
+
+			if ((gridData[i+2].Character == char) && (gridData[i+2].Color == "yellow")) {
+				//Character is yellow with matching yellow in the fourth position
+				regexPatternArray = append(regexPatternArray, fmt.Sprintf("%v[^%v]%v[^%v].$|^%v[^%v].[^%v]%v$|^.[^%v]%v[^%v]%v", char, char, char, char, char, char, char, char, char, char, char, char))
+			}
+
+			if ((gridData[i+3].Character == char) && (gridData[i+3].Color == "yellow")) {
+				//Character is yellow with matching yellow in the fifth position
+				regexPatternArray = append(regexPatternArray, fmt.Sprintf("%v[^%v].*[%v{1,2}].*[^%v]$|^.[^%v]%v%v[^%v]", char, char, char, char, char, char, char, char))
+			}
+
+			if ((gridData[i+1].Character == char) && (gridData[i+1].Color == "grey")) {
+				//Character is yellow with matching grey in the third position
+				regexPatternArray = append(regexPatternArray, fmt.Sprintf("%v[^%v][^%v]..$|^.[^%v][^%v].*[%v{1,2}].*", char, char, char, char, char, char))
+			}
+
+			if ((gridData[i+2].Character == char) && (gridData[i+2].Color == "grey")) {
+				//Character is yellow with matching grey in the fourth position
+				regexPatternArray = append(regexPatternArray, fmt.Sprintf("%v[^%v].[^%v].$|^.[^%v]%v[^%v].$|^.[^%v].[^%v]%v", char, char, char, char, char, char, char, char, char))
+			}
+
+			if ((gridData[i+3].Character == char) && (gridData[i+3].Color == "grey")) {
+				//Character is yellow with matching grey in the fifth position
+				regexPatternArray = append(regexPatternArray, fmt.Sprintf("%v[^%v]..[^%v]$|^.[^%v].*[%v{1,2}].*[^%v]", char, char, char, char, char, char))
+			}
+
+		} else {
+			//Character is grey
+
+			if (gridData[i-1].Character != char) && (gridData[i+1].Character != char) && (gridData[i+2].Character != char) && (gridData[i+3].Character != char) {
+				//Character is grey with no matching characters in the rest of the word
+				regexPatternArray = append(regexPatternArray, fmt.Sprintf("[^%v]*", char))
+			}
+
+			if ((gridData[i+1].Character == char) && (gridData[i+1].Color == "green")) {
+				//Character is grey with matching green in the third position
+				regexPatternArray = append(regexPatternArray, fmt.Sprintf(".[^%v]%v..", char, char))
+			}
+
+			if ((gridData[i+2].Character == char) && (gridData[i+2].Color == "green")) {
+				//Character is grey with matching green in the fourth position
+				regexPatternArray = append(regexPatternArray, fmt.Sprintf(".[^%v].%v.", char, char))
+			}
+
+			if ((gridData[i+3].Character == char) && (gridData[i+3].Color == "green")) {
+				//Character is grey with matching green in the fifth position
+				regexPatternArray = append(regexPatternArray, fmt.Sprintf(".[^%v]..%v", char, char))
+			}
+
+			if ((gridData[i+1].Character == char) && (gridData[i+1].Color == "yellow")) {
+				//Character is grey with matching yellow in the third position
+				regexPatternArray = append(regexPatternArray, fmt.Sprintf("%v[^%v][^%v]..$|^.[^%v][^%v].*[%v{1,2}].*", char, char, char, char, char, char))
+			}
+
+			if ((gridData[i+2].Character == char) && (gridData[i+2].Color == "yellow")) {
+				//Character is grey with matching yellow in the fourth position
+				regexPatternArray = append(regexPatternArray, fmt.Sprintf("%v[^%v].[^%v].$|^.[^%v]%v[^%v].$|^.[^%v].[^%v]%v", char, char, char, char, char, char, char, char, char))
+			}
+
+			if ((gridData[i+3].Character == char) && (gridData[i+3].Color == "yellow")) {
+				//Character is grey with matching yellow in the fifth position
+				regexPatternArray = append(regexPatternArray, fmt.Sprintf("%v[^%v]..[^%v]$|^.[^%v].*[%v{1,2}].*[^%v]", char, char, char, char, char, char))
+			}
+		}
+
+	case 2, 7, 12, 17, 22, 27:
+		//Character in third position
+		if (gridData[i].Color == "green") {
+			//Character is green
+
+			if ((gridData[i+1].Character == char) && (gridData[i+1].Color == "grey")) {
+				//Character is green with matching grey in the fourth position
+				regexPatternArray = append(regexPatternArray, fmt.Sprintf("..%v[^%v].", char, char))
+			}
+
+			if ((gridData[i+2].Character == char) && (gridData[i+2].Color == "grey")) {
+				//Character is green with matching grey in the fifth position
+				regexPatternArray = append(regexPatternArray, fmt.Sprintf("..%v.[^%v]", char, char))
+			}
+
+			if ((gridData[i+1].Character == char) && (gridData[i+1].Color == "yellow")) {
+				//Character is green with matching yellow in the fourth position
+				regexPatternArray = append(regexPatternArray, fmt.Sprintf(".*[%v{1,2}].*%v[^%v].$|^..%v[^%v]%v", char, char, char, char, char, char))
+			}
+
+			if ((gridData[i+2].Character == char) && (gridData[i+2].Color == "yellow")) {
+				//Character is green with matching yellow in the fifth position
+				regexPatternArray = append(regexPatternArray, fmt.Sprintf(".*[%v{1,2}].*%v.[^%v]$|^..%v%v[^%v]", char, char, char, char, char, char))
+			}
+
+		} else if (gridData[i].Color == "yellow") {
+			//Character is yellow
+
+			if ((gridData[i+1].Character == char) && (gridData[i+1].Color == "green")) {
+				//Character is yellow with matching green in the fourth position
+				regexPatternArray = append(regexPatternArray, fmt.Sprintf(".*[%v{1,2}].*[^%v]%v.$|^..[^%v]%v%v", char, char, char, char, char, char))
+			}
+
+			if ((gridData[i+2].Character == char) && (gridData[i+2].Color == "green")) {
+				//Character is yellow with matching green in the fifth position
+				regexPatternArray = append(regexPatternArray, fmt.Sprintf(".*[%v{1,2}].*[^%v].%v$|^..[^%v]%v%v", char, char, char, char, char, char))
+			}
+
+			if ((gridData[i+1].Character == char) && (gridData[i+1].Color == "yellow")) {
+				//Character is yellow with matching yellow in the fourth position
+				regexPatternArray = append(regexPatternArray, fmt.Sprintf("%v%v[^%v][^%v].$|^.*[%v{1,2}].*[^%v][^%v]%v", char, char, char, char, char, char, char, char))
+			}
+
+			if ((gridData[i+2].Character == char) && (gridData[i+2].Color == "yellow")) {
+				//Character is yellow with matching yellow in the fifth position
+				regexPatternArray = append(regexPatternArray, fmt.Sprintf("%v%v[^%v].[^%v]$|^.*[%v{1,2}].*[^%v]%v[^%v]", char, char, char, char, char, char, char, char))
+			}
+
+			if ((gridData[i+1].Character == char) && (gridData[i+1].Color == "grey")) {
+				//Character is yellow with matching grey in the fourth position
+				regexPatternArray = append(regexPatternArray, fmt.Sprintf(".*[%v{1,2}].*[^%v][^%v].$|^..[^%v][^%v]%v", char, char, char, char, char, char))
+			}
+
+			if ((gridData[i+2].Character == char) && (gridData[i+2].Color == "grey")) {
+				//Character is yellow with matching grey in the fifth position
+				regexPatternArray = append(regexPatternArray, fmt.Sprintf(".*[%v{1,2}].*[^%v].[^%v]$|^..[^%v]%v[^%v]", char, char, char, char, char, char))
+			}
+
+		} else {
+			//Character is grey
+
+			if (gridData[i-2].Character != char) && (gridData[i-1].Character != char) && (gridData[i+1].Character != char) && (gridData[i+2].Character != char) {
+				//Character is grey with no matching characters in the rest of the word
+				regexPatternArray = append(regexPatternArray, fmt.Sprintf("[^%v]*", char))
+			}
+
+			if ((gridData[i+1].Character == char) && (gridData[i+1].Color == "green")) {
+				//Character is grey with matching green in the fourth position
+				regexPatternArray = append(regexPatternArray, fmt.Sprintf("..[^%v]%v.", char, char))
+			}
+
+			if ((gridData[i+2].Character == char) && (gridData[i+2].Color == "green")) {
+				//Character is grey with matching green in the fifth position
+				regexPatternArray = append(regexPatternArray, fmt.Sprintf("..[^%v].%v", char, char))
+			}
+
+			if ((gridData[i+1].Character == char) && (gridData[i+1].Color == "yellow")) {
+				//Character is grey with matching yellow in the fourth position
+				regexPatternArray = append(regexPatternArray, fmt.Sprintf(".*[%v{1,2}].*[^%v][^%v].$|^..[^%v][^%v]%v", char, char, char, char, char, char))
+			}
+
+			if ((gridData[i+2].Character == char) && (gridData[i+2].Color == "yellow")) {
+				//Character is grey with matching yellow in the fifth position
+				regexPatternArray = append(regexPatternArray, fmt.Sprintf(".*[%v{1,2}].*[^%v].[^%v]$|^..[^%v]%v[^%v]", char, char, char, char, char, char))
+			}
+
+		}
+
+	case 3, 8, 13, 18, 23, 28:
+		//Character in fourth position
+		if (gridData[i].Color == "green") {
+			//Character is green
+
+			if ((gridData[i+1].Character == char) && (gridData[i+1].Color == "grey")) {
+				//Character is green with matching grey in the fifth position
+				regexPatternArray = append(regexPatternArray, fmt.Sprintf("...%v[^%v]", char, char))
+			}
+
+			if ((gridData[i+1].Character == char) && (gridData[i+1].Color == "yellow")) {
+				//Character is green with matching yellow in the fifth position
+				regexPatternArray = append(regexPatternArray, fmt.Sprintf(".*[%v{1,3}].*%v[^%v]", char, char, char))
+			}
+
+		} else if (gridData[i].Color == "yellow") {
+			//Character is yellow
+
+			if ((gridData[i+1].Character == char) && (gridData[i+1].Color == "green")) {
+				//Character is yellow with matching green in the fifth position
+				regexPatternArray = append(regexPatternArray, fmt.Sprintf(".*[%v{1,3}].*[^%v]%v", char, char, char))
+			}
+
+			if ((gridData[i+1].Character == char) && (gridData[i+1].Color == "yellow")) {
+				//Character is yellow with matching yellow in the fifth position
+				regexPatternArray = append(regexPatternArray, fmt.Sprintf(".*[%v{2,3}].*[^%v][^%v]", char, char, char))
+			}
+
+			if ((gridData[i+1].Character == char) && (gridData[i+1].Color == "grey")) {
+				//Character is yellow with matching grey in the fifth position
+				regexPatternArray = append(regexPatternArray, fmt.Sprintf(".*[%v{1,3}].*[^%v][^%v]", char, char, char))
+			}
+
+		} else {
+			//Character is grey
+
+			if (gridData[i-3].Character != char) && (gridData[i-2].Character != char) && (gridData[i-1].Character != char) && (gridData[i+1].Character != char) {
+				//Character is grey with no matching characters in the rest of the word
+				regexPatternArray = append(regexPatternArray, fmt.Sprintf("[^%v]*", char))
+			}
+
+			if ((gridData[i+1].Character == char) && (gridData[i+1].Color == "green")) {
+				//Character is grey with matching green in the fifth position
+				regexPatternArray = append(regexPatternArray, fmt.Sprintf("...[^%v]%v", char, char))
+			}
+
+			if ((gridData[i+1].Character == char) && (gridData[i+1].Color == "yellow")) {
+				//Character is grey with matching yellow in the fifth position
+				regexPatternArray = append(regexPatternArray, fmt.Sprintf(".*[%v{1,3}].*[^%v][^%v]", char, char, char))
+			}
+
+		}
+
+	case 4, 9, 14, 19, 24, 29:
+		//Character in fifth position
+		if (gridData[i].Color == "green") {
+			//Character is green
+
+
+		} else if (gridData[i].Color == "yellow") {
+			//Character is yellow
+
+
+		} else {
+			//Character is grey
+
+			if (gridData[i-4].Character != char) && (gridData[i-3].Character != char) && (gridData[i-2].Character != char) && (gridData[i-1].Character != char) {
+				//Character is grey with no matching characters in the rest of the word
+				regexPatternArray = append(regexPatternArray, fmt.Sprintf("[^%v]*", char))
+			}
+	
+		}
+	}
+
+	//Joining various regex patterns with separator
+	glog.Info("Joining various regex patterns")
+	multiLetterRegexPattern = strings.Join(regexPatternArray, "$|^")
+
+	glog.Info("Returning setRegexPattern function")
+	return multiLetterRegexPattern
 }
 
 //Define a function to revise the answerList based on given regex patterns

@@ -42,7 +42,7 @@ func main() {
 	}
 }
 
-//Define function for parse user's guesses
+//Define function to parse the user's guesses
 func parseGuesses(c *gin.Context) {
 	var gridData []CellData
 	if err := c.ShouldBindJSON(&gridData); err != nil {
@@ -66,14 +66,14 @@ func parseGuesses(c *gin.Context) {
 		glog.Flush()
 		c.JSON(httpStatus, gin.H{"error": solvingError})
 	} else {
-		// Respond with the result
+		//Respond with the result
 		glog.Info("Responding to the page with expected results")
 		glog.Flush()
 		c.JSON(httpStatus, gin.H{"result": result, "resultCount": countOfResults})
 	}
 }
 
-// Placeholder for your Wordle solving logic
+//Function for Wordle solving logic
 func solveWordle(gridData []CellData) (result string, countOfResults int, solvingError string, httpStatus int) {
 
 	//Set default HTTP response code (will be updated if there is an error)
@@ -106,24 +106,24 @@ func solveWordle(gridData []CellData) (result string, countOfResults int, solvin
 			continue
 		}
 
-		//Set regex patterns for each color according current index position
-		glog.Info("Calling setRegexPatterns function")
-		greenRegex, yellowRegex, greyRegex := setRegexPatterns(i, box.Character, gridData)
+		//Set regex pattern for each box according current index position
+		glog.Info("Calling setSingleLetterRegexPattern function")
+		singleLetterRegexPattern := setSingleLetterRegexPattern(i, box.Character, gridData)
+		glog.Info("Calling setMultiLetterRegexPattern function")
+		multiLetterRegexPattern := setMultiLetterRegexPattern(i, box.Character, gridData)
 
 		//Revise the answerList based on the box color
 		switch box.Color {
-		case "green":
+		case "green", "yellow", "grey":
 			//Find matches for character in position
-			glog.Info("Calling reviseAnswerList function using greenRegex pattern")
-			answerList = reviseAnswerList(answerList, greenRegex)
-		case "yellow":
-			//Find matches for character not position
-			glog.Info("Calling reviseAnswerList function using yellowRegex pattern")
-			answerList = reviseAnswerList(answerList, yellowRegex)
-		case "grey":
-			//Find matches for character not position
-			glog.Info("Calling reviseAnswerList function using greyRegex pattern")
-			answerList = reviseAnswerList(answerList, greyRegex)
+			glog.Info("Calling reviseAnswerList function using singleLetterRegexPattern pattern")
+			answerList = reviseAnswerList(answerList, singleLetterRegexPattern)
+
+			//If a complex logic operator has been set, apply it to the list here
+			if len(multiLetterRegexPattern) > 0 {
+				glog.Info("Calling reviseAnswerList function using multiLetterRegexPattern pattern")
+				answerList = reviseAnswerList(answerList, multiLetterRegexPattern)
+			}
 		default:
 			//Invalid color, this should never be reached (except in the tests)
 			glog.Errorf("Invalid color recieved: %v", box.Color)
