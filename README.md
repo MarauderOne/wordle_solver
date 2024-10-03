@@ -26,26 +26,36 @@ flowchart TD
     C[Characters converted to uppercase]
     F[Create initial answer list of all 5237 possible answers]
     G[For each slice in the struct]
-    D{"Is character\nalphabetic?"}
+    D{Is character alphabetic?}
     E([Return Error])
-    H[Ignore slices where either\nthe character or color is blank]
-    I["Determine position in row\n(First to Fifth)"]
-    J["Set regex pattern for Green box\n(Word contains this character in this position)"]
-    K["Set regex pattern for Yellow box\n(Word contains this character in any position except this one)"]
-    L{"Does this\ncharacter exist\nanywhere else\nin the row?"}
-    M["Set regex pattern for Grey box\n(Word does not contain this character in this position)"]
-    N["Set regex pattern for Grey box\n(Word does not contain this character any position)"]
-    O{"What is the\ncolor of the box\nin this iteration\nof the loop?"}
-    P[Revise answer list using\nregex pattern for Green boxes]
-    Q[Revise answer list using\nregex pattern for Yellow boxes]
-    R[Revise answer list using\nregex pattern for Grey boxes]
-    S([Error out for unrecognised colors])
-    T{"Has the count\nof answers reached\none or fewer?"}
-    U["Break the loop early\n(No point iterating further at this point)"]
-    V{"Have we reached\nthe end of the loop?"}
-    W{"Is the count of\nanswers still 5237?"}
-    X([Tell the user to keep entering guess data])
-    Y([Return the results to the user])
+    H[Ignore slices where either the character or color is blank]
+    I[Single-letter logic function]
+    J[Determine position in row]
+    K{Is the box green?}
+    L[Set the regex pattern characters in this postion in green boxes]
+    M{Is the box yellow?}
+    N[Set the regex pattern characters in this postion in yellow boxes]
+    O[Set the regex pattern characters in this postion in grey boxes]
+    P[Return regex pattern]
+    Q[Multi-letter logic function]
+    R[Determine position in row]
+    S{Is the box green?}
+    T[Determine the presence of concurrent characters and the colors of their corresponding boxes, set regex patterns accordingly]
+    U{Is the box yellow?}
+    V[Determine the presence of concurrent characters and the colors of their corresponding boxes, set regex patterns accordingly]
+    W[Determine the presence of concurrent characters and the colors of their corresponding boxes, set regex patterns accordingly]
+    X[Return regex pattern]
+    Y{Is the current box at this iteration of the loop a valid color?}
+    Z([Error out for unrecognised colors])
+    AA[Revise the list of potential answers using regex pattern from the single-letter logic function]
+    AB{Were we able to set a regex pattern for multi-letter logic?}
+    AC[Revise the list of potential answers using regex pattern from the multi-letter logic function]
+    AD{Has the count of answers reached one or fewer?}
+    AE(["Break the loop early (No point iterating further at this point)"])
+    AF{Have we reached the end of the loop?}
+    AG{Is the count of answers still 5237?}
+    AH([Tell the user to keep entering guess data])
+    AI([Return the results to the user])
 
     A -->|POST to /guesses| B
     B --> C
@@ -57,25 +67,37 @@ flowchart TD
     H --> I
     I --> J
     J --> K
-    K --> L
-    L -->|Yes| M
-    L -->|No| N
-    M --> O
-    N --> O
-    O -->|Green| P
-    O -->|Yellow| Q
-    O -->|Grey| R
-    O -->|Unrecognised color| S
-    P --> T
-    Q --> T
-    R --> T
-    T -->|Yes| U
-    T -->|No| V
-    U --> W
-    V -->|No| G
-    V -->|Yes| W
-    W -->|Yes| X
-    W -->|No| Y
+    K -->|Yes| L
+    L --> P
+    K -->|No| M
+    M -->|Yes| N
+    N --> P
+    M -->|No| O
+    O --> P
+    P --> Q
+    Q --> R
+    R --> S
+    S -->|Yes| T
+    T --> X
+    S -->|No| U
+    U -->|Yes| V
+    V --> X
+    U -->|No| W
+    W --> X
+    X --> Y
+    Y -->|Yes| AA
+    Y -->|No| Z
+    AA --> AB
+    AB -->|Yes| AC
+    AB -->|No| AD
+    AC --> AD
+    AD -->|Yes| AE
+    AD -->|No| AF
+    AF -->|Yes| AG
+    AF -->|No| G
+    AG -->|Yes| AH
+    AG -->|No| AI
+
 ```
 
 ## Prerequisites for Local Execution
