@@ -176,7 +176,8 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 });
 
-function toggleTheme() {
+// Function to apply the theme
+function applyTheme(theme) {
     var darkThemeToggleButton = document.getElementById("darkThemeToggleButton");
     var headerNav = document.getElementById("headerNav");
     var title = document.getElementById("title");
@@ -184,31 +185,34 @@ function toggleTheme() {
     var pageFrame = document.getElementById("pageFrame");
     var boxes = document.getElementsByClassName("box");
     var answerbox = document.getElementById("answerbox");
-    if (darkThemeToggleButton.className === "fa fa-toggle-off fa-2x") {
-        //Toggle the button
+
+    if (theme === "dark") {
+        // Apply dark theme styles
+        // Toggle the button
         darkThemeToggleButton.className = "fa fa-toggle-on fa-2x";
         darkThemeToggleButton.style.backgroundColor = "rgb(35, 35, 35)";
         darkThemeToggleButton.style.color = "white";
-        //Header colours
+        // Header colours
         headerNav.style.backgroundColor = "rgb(35, 35, 35)";
         headerNav.style.color = "white";
-        //Change title colours
+        // Change title colours
         title.style.backgroundColor = "rgb(35, 35, 35)";
         title.style.color = "white";
-        //Change background colour
+        // Change background colour
         body.style.backgroundColor = "rgb(35, 35, 35)";
-        //Change instructions colour
+        // Change instructions colour
         pageFrame.style.color = "white";
         //Change box colours
         for(var i = 0; i < boxes.length; i++) {
             boxes[i].style.backgroundColor = "rgb(35, 35, 35)";
             boxes[i].style.color = "white";
         }
-        //Change answer box colours
+        // Change answer box colours
         answerbox.style.backgroundColor = "rgb(35, 35, 35)";
         answerbox.style.color = "white";
     } else {
-        //Toggle the button
+        // Apply light theme styles
+        // Toggle the button
         darkThemeToggleButton.className = "fa fa-toggle-off fa-2x";
         darkThemeToggleButton.style.backgroundColor = "white";
         darkThemeToggleButton.style.color = "black";
@@ -232,3 +236,24 @@ function toggleTheme() {
         answerbox.style.color = "black";
     }
 }
+
+// Function to toggle the theme and save preference
+function toggleTheme() {
+    var currentTheme = localStorage.getItem("theme");
+
+    if (currentTheme === "dark") {
+        // Switch to light theme and save preference
+        applyTheme("light");
+        localStorage.setItem("theme", "light");
+    } else {
+        // Switch to dark theme and save preference
+        applyTheme("dark");
+        localStorage.setItem("theme", "dark");
+    }
+}
+
+// Check localStorage for the theme preference when the page loads
+window.onload = function() {
+    var savedTheme = localStorage.getItem("theme") || "light"; // Default to light theme
+    applyTheme(savedTheme);
+};
