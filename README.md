@@ -24,7 +24,7 @@ flowchart TD
     A[/JSON array of user guesses/]
     B[Parsed into Go Struct]
     C[Characters converted to uppercase]
-    F[Create initial answer list of all 5237 possible answers]
+    F[Create initial answer list of all 5223 possible answers]
     G[For each slice in the struct]
     D{Is character alphabetic?}
     E([Return Error])
@@ -53,7 +53,7 @@ flowchart TD
     AD{Has the count of answers reached one or fewer?}
     AE(["Break the loop early (No point iterating further at this point)"])
     AF{Have we reached the end of the loop?}
-    AG{Is the count of answers still 5237?}
+    AG{Is the count of answers still 5223?}
     AH([Tell the user to keep entering guess data])
     AI([Return the results to the user])
 
