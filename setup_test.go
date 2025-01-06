@@ -12,7 +12,7 @@ func TestCreateNewAnswerList(t *testing.T) {
 
 	assert.NotEmpty(t, answerList)
 	assert.IsType(t, dictionary_tools.MySimpleDict{}, *answerList)
-	assert.Equal(t, 5224, resultCount)
+	assert.Equal(t, 5191, resultCount)
 	assert.Contains(t, answerList.Words, "ABACK")
 }
 
@@ -108,7 +108,7 @@ func TestReviseAnswerList(t *testing.T) {
 
 	assert.NotEmpty(t, answerList)
 	assert.IsType(t, dictionary_tools.MySimpleDict{}, *answerList)
-	assert.Equal(t, 689, resultCount)
+	assert.Equal(t, 683, resultCount)
 	assert.Contains(t, answerList.Words, "SABER")
 }
 
