@@ -82,6 +82,7 @@ func solveWordle(gridData []CellData) (result string, countOfResults int, solvin
 	//Initialise answer list
 	glog.Info("Calling createNewAnswerList function")
 	answerList := createNewAnswerList()
+	answerListMaxCount := answerList.Count()
 
 	//Start looping through the user boxes
 	for i, box := range gridData {
@@ -145,7 +146,7 @@ func solveWordle(gridData []CellData) (result string, countOfResults int, solvin
 		}
 	}
 
-	if answerList.Count() == 5224 {
+	if answerList.Count() == answerListMaxCount {
 		glog.Warning("After applying logic, answerList is still at maximum count")
 		solvingError = "Keep adding letters and colors to generate potential answers..."
 		httpStatus = http.StatusBadRequest
