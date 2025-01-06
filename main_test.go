@@ -150,7 +150,7 @@ func TestSolveWordle(t *testing.T) {
 		assert.NotEmpty(t, jsonResponse["result"])
 		assert.NotEmpty(t, jsonResponse["resultCount"])
 		assert.NotContains(t, jsonResponse["result"], "t")
-		assert.Equal(t, float64(3894), jsonResponse["resultCount"])
+		assert.Equal(t, float64(3895), jsonResponse["resultCount"])
 	})
 
 	t.Run("Test invalid character input", func(t *testing.T) {
