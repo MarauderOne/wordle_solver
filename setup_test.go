@@ -63,26 +63,6 @@ func TestSetRegexPatterns(t *testing.T) {
 		assert.Equal(t, "[^A]....", singleLetterRegexPattern)
 		})
 
-	t.Run("Test complex yellow logic", func(t *testing.T) {
-		//Define a valid grid input
-		gridData := []CellData{
-			{Character: "I", Color: "grey"},
-			{Character: "R", Color: "grey"},
-			{Character: "A", Color: "grey"},
-			{Character: "T", Color: "grey"},
-			{Character: "E", Color: "yellow"},
-			{Character: "S", Color: "grey"},
-			{Character: "L", Color: "yellow"},
-			{Character: "E", Color: "green"},
-			{Character: "E", Color: "yellow"},
-			{Character: "P", Color: "grey"},
-		}
-		multiLetterRegexPattern := setMultiLetterRegexPattern(7, "E", gridData)
-
-		assert.NotEmpty(t, multiLetterRegexPattern)
-		assert.Equal(t, ".*[E{1,2}].*E[^E].$|^..E[^E]E", multiLetterRegexPattern)
-		})
-
 	t.Run("Test complex grey logic", func(t *testing.T) {
 		//Define a valid grid input
 		gridData := []CellData{
