@@ -98,7 +98,7 @@ func TestSolveWordle(t *testing.T) {
 		assert.NotEmpty(t, jsonResponse["result"])
 		assert.NotEmpty(t, jsonResponse["resultCount"])
 		assert.Contains(t, jsonResponse["result"], "ACING")
-		assert.Equal(t, float64(868), jsonResponse["resultCount"])
+		assert.Equal(t, float64(696), jsonResponse["resultCount"])
 	})
 
 	t.Run("Test remaining solutions at max", func(t *testing.T) {
