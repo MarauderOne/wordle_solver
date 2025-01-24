@@ -66,11 +66,11 @@ func TestSetRegexPatterns(t *testing.T) {
 	t.Run("Test complex grey logic", func(t *testing.T) {
 		//Define a valid grid input
 		gridData := []CellData{
-			{Character: "I", Color: "yellow"},
-			{Character: "R", Color: "yellow"},
-			{Character: "A", Color: "green"},
 			{Character: "T", Color: "grey"},
-			{Character: "E", Color: "yellow"},
+			{Character: "A", Color: "yellow"},
+			{Character: "R", Color: "green"},
+			{Character: "T", Color: "grey"},
+			{Character: "S", Color: "yellow"},
 		}
 		multiLetterRegexPattern := setMultiLetterRegexPattern(3, "T", gridData)
 
