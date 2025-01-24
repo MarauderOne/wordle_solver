@@ -1,9 +1,9 @@
 package main
 
 import (
-	"testing"
 	"github.com/MarauderOne/wordle_solver/dictionary_tools"
 	"github.com/stretchr/testify/assert"
+	"testing"
 )
 
 func TestCreateNewAnswerList(t *testing.T) {
@@ -19,18 +19,18 @@ func TestCreateNewAnswerList(t *testing.T) {
 func TestSetRegexPatterns(t *testing.T) {
 
 	t.Run("Test simple green logic", func(t *testing.T) {
-	//Define a valid grid input
-	gridData := []CellData{
-		{Character: "A", Color: "green"},
-		{Character: "", Color: ""},
-		{Character: "", Color: ""},
-		{Character: "", Color: ""},
-		{Character: "", Color: ""},
-	}
-	singleLetterRegexPattern := setSingleLetterRegexPattern(0, "A", gridData)
+		//Define a valid grid input
+		gridData := []CellData{
+			{Character: "A", Color: "green"},
+			{Character: "", Color: ""},
+			{Character: "", Color: ""},
+			{Character: "", Color: ""},
+			{Character: "", Color: ""},
+		}
+		singleLetterRegexPattern := setSingleLetterRegexPattern(0, "A", gridData)
 
-	assert.NotEmpty(t, singleLetterRegexPattern)
-	assert.Equal(t, "A....", singleLetterRegexPattern)
+		assert.NotEmpty(t, singleLetterRegexPattern)
+		assert.Equal(t, "A....", singleLetterRegexPattern)
 	})
 
 	t.Run("Test simple yellow logic", func(t *testing.T) {
@@ -43,10 +43,10 @@ func TestSetRegexPatterns(t *testing.T) {
 			{Character: "", Color: ""},
 		}
 		singleLetterRegexPattern := setSingleLetterRegexPattern(0, "A", gridData)
-	
+
 		assert.NotEmpty(t, singleLetterRegexPattern)
 		assert.Equal(t, "[^A].*[A{1,4}].*", singleLetterRegexPattern)
-		})
+	})
 
 	t.Run("Test simple grey logic", func(t *testing.T) {
 		//Define a valid grid input
@@ -58,12 +58,12 @@ func TestSetRegexPatterns(t *testing.T) {
 			{Character: "", Color: ""},
 		}
 		singleLetterRegexPattern := setSingleLetterRegexPattern(0, "A", gridData)
-	
+
 		assert.NotEmpty(t, singleLetterRegexPattern)
 		assert.Equal(t, "[^A]....", singleLetterRegexPattern)
-		})
+	})
 
-	t.Run("Test complex grey logic", func(t *testing.T) {
+	t.Run("Test complex grey logic #1", func(t *testing.T) {
 		//Define a valid grid input
 		gridData := []CellData{
 			{Character: "T", Color: "grey"},
@@ -76,7 +76,22 @@ func TestSetRegexPatterns(t *testing.T) {
 
 		assert.NotEmpty(t, multiLetterRegexPattern)
 		assert.Equal(t, "[^T]*", multiLetterRegexPattern)
-		})
+	})
+
+	t.Run("Test complex grey logic #2", func(t *testing.T) {
+		//Define a valid grid input
+		gridData := []CellData{
+			{Character: "C", Color: "grey"},
+			{Character: "A", Color: "yellow"},
+			{Character: "R", Color: "green"},
+			{Character: "T", Color: "grey"},
+			{Character: "S", Color: "yellow"},
+		}
+		multiLetterRegexPattern := setMultiLetterRegexPattern(3, "T", gridData)
+
+		assert.NotEmpty(t, multiLetterRegexPattern)
+		assert.Equal(t, "[^T]*", multiLetterRegexPattern)
+	})
 }
 
 func TestReviseAnswerList(t *testing.T) {
