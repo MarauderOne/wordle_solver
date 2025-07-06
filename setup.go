@@ -135,6 +135,26 @@ func setMultiLetterRegexPattern(i int, char string, gridData []CellData) (multiL
 		} else if gridData[i].Color == "yellow" {
 			//Character is yellow
 
+			//Check if the character is repeated in the rest of the word
+			charCount := 1
+			if ((gridData[i+1].Character == char) && (gridData[i+1].Color != "grey")) {
+				charCount++
+			}
+			if ((gridData[i+2].Character == char) && (gridData[i+2].Color != "grey")) {
+				charCount++
+			}
+			if ((gridData[i+3].Character == char) && (gridData[i+3].Color != "grey")) {
+				charCount++
+			}
+			if ((gridData[i+4].Character == char) && (gridData[i+4].Color != "grey")) {
+				charCount++
+			}
+			if charCount > 1 {
+				//Character is yellow with at least 1 matching green or yellow character somewhere in the rest of the word
+				glog.Infof("Set regex pattern for words that contain %v number of %v characters", charCount, char)
+				regexPatternArray = append(regexPatternArray, fmt.Sprintf("(?:[^%v]*%v){%v}[^%v]*", char, char, charCount, char))
+			}
+
 		} else {
 			//Character is grey
 
@@ -164,6 +184,26 @@ func setMultiLetterRegexPattern(i int, char string, gridData []CellData) (multiL
 
 		} else if gridData[i].Color == "yellow" {
 			//Character is yellow
+			
+			//Check if the character is repeated in the rest of the word
+			charCount := 1
+			if ((gridData[i-1].Character == char) && (gridData[i-1].Color != "grey")) {
+				charCount++
+			}
+			if ((gridData[i+1].Character == char) && (gridData[i+1].Color != "grey")) {
+				charCount++
+			}
+			if ((gridData[i+2].Character == char) && (gridData[i+2].Color != "grey")) {
+				charCount++
+			}
+			if ((gridData[i+3].Character == char) && (gridData[i+3].Color != "grey")) {
+				charCount++
+			}
+			if charCount > 1 {
+				//Character is yellow with at least 1 matching green or yellow character somewhere in the rest of the word
+				glog.Infof("Set regex pattern for words that contain %v number of %v characters", charCount, char)
+				regexPatternArray = append(regexPatternArray, fmt.Sprintf("(?:[^%v]*%v){%v}[^%v]*", char, char, charCount, char))
+			}
 
 		} else {
 			//Character is grey
@@ -195,6 +235,26 @@ func setMultiLetterRegexPattern(i int, char string, gridData []CellData) (multiL
 		} else if gridData[i].Color == "yellow" {
 			//Character is yellow
 
+			//Check if the character is repeated in the rest of the word
+			charCount := 1
+			if ((gridData[i-2].Character == char) && (gridData[i-2].Color != "grey")) {
+				charCount++
+			}
+			if ((gridData[i-1].Character == char) && (gridData[i-1].Color != "grey")) {
+				charCount++
+			}
+			if ((gridData[i+1].Character == char) && (gridData[i+1].Color != "grey")) {
+				charCount++
+			}
+			if ((gridData[i+2].Character == char) && (gridData[i+2].Color != "grey")) {
+				charCount++
+			}
+			if charCount > 1 {
+				//Character is yellow with at least 1 matching green or yellow character somewhere in the rest of the word
+				glog.Infof("Set regex pattern for words that contain %v number of %v characters", charCount, char)
+				regexPatternArray = append(regexPatternArray, fmt.Sprintf("(?:[^%v]*%v){%v}[^%v]*", char, char, charCount, char))
+			}
+
 		} else {
 			//Character is grey
 
@@ -225,6 +285,26 @@ func setMultiLetterRegexPattern(i int, char string, gridData []CellData) (multiL
 		} else if gridData[i].Color == "yellow" {
 			//Character is yellow
 
+			//Check if the character is repeated in the rest of the word
+			charCount := 1
+			if ((gridData[i-3].Character == char) && (gridData[i-3].Color != "grey")) {
+				charCount++
+			}
+			if ((gridData[i-2].Character == char) && (gridData[i-2].Color != "grey")) {
+				charCount++
+			}
+			if ((gridData[i-1].Character == char) && (gridData[i-1].Color != "grey")) {
+				charCount++
+			}
+			if ((gridData[i+1].Character == char) && (gridData[i+1].Color != "grey")) {
+				charCount++
+			}
+			if charCount > 1 {
+				//Character is yellow with at least 1 matching green or yellow character somewhere in the rest of the word
+				glog.Infof("Set regex pattern for words that contain %v number of %v characters", charCount, char)
+				regexPatternArray = append(regexPatternArray, fmt.Sprintf("(?:[^%v]*%v){%v}[^%v]*", char, char, charCount, char))
+			}
+
 		} else {
 			//Character is grey
 
@@ -254,6 +334,26 @@ func setMultiLetterRegexPattern(i int, char string, gridData []CellData) (multiL
 
 		} else if gridData[i].Color == "yellow" {
 			//Character is yellow
+
+			//Check if the character is repeated in the rest of the word
+			charCount := 1
+			if ((gridData[i-4].Character == char) && (gridData[i-4].Color != "grey")) {
+				charCount++
+			}
+			if ((gridData[i-3].Character == char) && (gridData[i-3].Color != "grey")) {
+				charCount++
+			}
+			if ((gridData[i-2].Character == char) && (gridData[i-2].Color != "grey")) {
+				charCount++
+			}
+			if ((gridData[i-1].Character == char) && (gridData[i-1].Color != "grey")) {
+				charCount++
+			}
+			if charCount > 1 {
+				//Character is yellow with at least 1 matching green or yellow character somewhere in the rest of the word
+				glog.Infof("Set regex pattern for words that contain %v number of %v characters", charCount, char)
+				regexPatternArray = append(regexPatternArray, fmt.Sprintf("(?:[^%v]*%v){%v}[^%v]*", char, char, charCount, char))
+			}
 
 		} else {
 			//Character is grey
