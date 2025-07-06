@@ -63,6 +63,26 @@ func TestSetRegexPatterns(t *testing.T) {
 		assert.Equal(t, "[^A]....", singleLetterRegexPattern)
 	})
 
+	t.Run("Test complex yellow logic #1", func(t *testing.T) {
+		//Define a valid grid input
+		gridData := []CellData{
+			{Character: "I", Color: "green"},
+			{Character: "R", Color: "grey"},
+			{Character: "A", Color: "grey"},
+			{Character: "T", Color: "grey"},
+			{Character: "E", Color: "grey"},
+			{Character: "I", Color: "green"},
+			{Character: "G", Color: "grey"},
+			{Character: "N", Color: "grey"},
+			{Character: "I", Color: "yellow"},
+			{Character: "S", Color: "grey"},
+		}
+		multiLetterRegexPattern := setMultiLetterRegexPattern(8, "I", gridData)
+
+		assert.NotEmpty(t, multiLetterRegexPattern)
+		assert.Equal(t, "(?:[^I]*I){2}[^I]*", multiLetterRegexPattern)
+	})
+
 	t.Run("Test complex grey logic #1", func(t *testing.T) {
 		//Define a valid grid input
 		gridData := []CellData{
