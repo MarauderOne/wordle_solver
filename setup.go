@@ -108,7 +108,7 @@ func setSingleLetterRegexPattern(i int, char string, gridData []CellData) (singl
 			singleLetterRegexPattern = fmt.Sprintf("....[^%v]", char)
 		}
 	}
-	glog.Info("Returning setRegexPattern function")
+	glog.Info("Returning singleLetterRegexPattern function")
 	return singleLetterRegexPattern
 }
 
@@ -352,7 +352,7 @@ func setMultiLetterRegexPattern(i int, char string, gridData []CellData) (multiL
 	glog.Info("Joining various regex patterns")
 	multiLetterRegexPattern = strings.Join(regexPatternArray, "$|^")
 
-	glog.Info("Returning setRegexPattern function")
+	glog.Info("Returning multiLetterRegexPattern function")
 	return multiLetterRegexPattern
 }
 
