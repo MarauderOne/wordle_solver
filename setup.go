@@ -158,7 +158,7 @@ func setMultiLetterRegexPattern(i int, char string, gridData []CellData) (multiL
 		} else {
 			//Character is grey
 
-			if ((gridData[i+1].Character == char) && (gridData[i+1].Color == "grey")) || ((gridData[i+2].Character == char) && (gridData[i+2].Color == "grey")) || ((gridData[i+3].Character == char) && (gridData[i+3].Color == "grey")) || ((gridData[i+4].Character == char) && (gridData[i+4].Color == "grey")) {
+			if (((gridData[i+1].Character == char) && (gridData[i+1].Color == "grey")) || (gridData[i+1].Character != char)) && (((gridData[i+2].Character == char) && (gridData[i+2].Color == "grey")) || (gridData[i+2].Character != char)) && (((gridData[i+3].Character == char) && (gridData[i+3].Color == "grey")) || (gridData[i+3].Character != char)) && (((gridData[i+4].Character == char) && (gridData[i+4].Color == "grey")) || (gridData[i+4].Character != char)) {
 				//Character is grey with no matching green or yellow characters in the rest of the word
 				glog.Info("Set regex pattern for first position grey character with no matching green or yellow characters in the rest of the word")
 				regexPatternArray = append(regexPatternArray, fmt.Sprintf("[^%v]*", char))
@@ -208,7 +208,7 @@ func setMultiLetterRegexPattern(i int, char string, gridData []CellData) (multiL
 		} else {
 			//Character is grey
 
-			if ((gridData[i-1].Character == char) && (gridData[i-1].Color == "grey")) || ((gridData[i+1].Character == char) && (gridData[i+1].Color == "grey")) || ((gridData[i+2].Character == char) && (gridData[i+2].Color == "grey")) || ((gridData[i+3].Character == char) && (gridData[i+3].Color == "grey")) {
+			if (((gridData[i-1].Character == char) && (gridData[i-1].Color == "grey")) || (gridData[i-1].Character != char)) && (((gridData[i+1].Character == char) && (gridData[i+1].Color == "grey")) || (gridData[i+1].Character != char)) && (((gridData[i+2].Character == char) && (gridData[i+2].Color == "grey")) || (gridData[i+2].Character != char)) && (((gridData[i+3].Character == char) && (gridData[i+3].Color == "grey")) || (gridData[i+3].Character != char)) {
 				//Character is grey with no matching green or yellow characters in the rest of the word
 				glog.Info("Set regex pattern for second position grey character with no matching green or yellow characters in the rest of the word")
 				regexPatternArray = append(regexPatternArray, fmt.Sprintf("[^%v]*", char))
@@ -258,7 +258,7 @@ func setMultiLetterRegexPattern(i int, char string, gridData []CellData) (multiL
 		} else {
 			//Character is grey
 
-			if ((gridData[i-2].Character == char) && (gridData[i-2].Color == "grey")) || ((gridData[i-1].Character == char) && (gridData[i-1].Color == "grey")) || ((gridData[i+1].Character == char) && (gridData[i+1].Color == "grey")) || ((gridData[i+2].Character == char) && (gridData[i+2].Color == "grey")) {
+			if (((gridData[i-2].Character == char) && (gridData[i-2].Color == "grey")) || (gridData[i-2].Character != char)) && (((gridData[i-1].Character == char) && (gridData[i-1].Color == "grey")) || (gridData[i-1].Character != char)) && (((gridData[i+1].Character == char) && (gridData[i+1].Color == "grey")) || (gridData[i+1].Character != char)) && (((gridData[i+2].Character == char) && (gridData[i+2].Color == "grey")) || (gridData[i+2].Character != char)) {
 				//Character is grey with no matching green or yellow characters in the rest of the word
 				glog.Info("Set regex pattern for third position grey character with no matching green or yellow characters in the rest of the word")
 				regexPatternArray = append(regexPatternArray, fmt.Sprintf("[^%v]*", char))
@@ -308,7 +308,7 @@ func setMultiLetterRegexPattern(i int, char string, gridData []CellData) (multiL
 		} else {
 			//Character is grey
 
-			if ((gridData[i-3].Character == char) && (gridData[i-3].Color == "grey")) || ((gridData[i-2].Character == char) && (gridData[i-2].Color == "grey")) || ((gridData[i-1].Character == char) && (gridData[i-1].Color == "grey")) || ((gridData[i+1].Character == char) && (gridData[i+1].Color == "grey")) {
+			if (((gridData[i-3].Character == char) && (gridData[i-3].Color == "grey")) || (gridData[i-3].Character != char)) && (((gridData[i-2].Character == char) && (gridData[i-2].Color == "grey")) || (gridData[i-2].Character != char)) && (((gridData[i-1].Character == char) && (gridData[i-1].Color == "grey")) || (gridData[i-1].Character != char)) && (((gridData[i+1].Character == char) && (gridData[i+1].Color == "grey")) || (gridData[i+1].Character != char)) {
 				//Character is grey with no matching green or yellow characters in the rest of the word
 				glog.Info("Set regex pattern for fourth position grey character with no matching green or yellow characters in the rest of the word")
 				regexPatternArray = append(regexPatternArray, fmt.Sprintf("[^%v]*", char))
@@ -358,7 +358,7 @@ func setMultiLetterRegexPattern(i int, char string, gridData []CellData) (multiL
 		} else {
 			//Character is grey
 
-			if ((gridData[i-4].Character == char) && (gridData[i-4].Color == "grey")) || ((gridData[i-3].Character == char) && (gridData[i-3].Color == "grey")) || ((gridData[i-2].Character == char) && (gridData[i-2].Color == "grey")) || ((gridData[i-1].Character == char) && (gridData[i-1].Color == "grey")) {
+			if (((gridData[i-4].Character == char) && (gridData[i-4].Color == "grey")) || (gridData[i-4].Character != char)) && (((gridData[i-3].Character == char) && (gridData[i-3].Color == "grey")) || (gridData[i-3].Character != char)) && (((gridData[i-2].Character == char) && (gridData[i-2].Color == "grey")) || (gridData[i-2].Character != char)) && (((gridData[i-1].Character == char) && (gridData[i-1].Color == "grey")) || (gridData[i-1].Character != char)) {
 				//Character is grey with no matching green or yellow characters in the rest of the word
 				glog.Info("Set regex pattern for fifth position grey character with no matching green or yellow characters in the rest of the word")
 				regexPatternArray = append(regexPatternArray, fmt.Sprintf("[^%v]*", char))
