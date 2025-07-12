@@ -112,6 +112,20 @@ func TestSetRegexPatterns(t *testing.T) {
 		assert.NotEmpty(t, multiLetterRegexPattern)
 		assert.Equal(t, "[^T]*", multiLetterRegexPattern)
 	})
+
+	t.Run("Test complex grey logic #3", func(t *testing.T) {
+		//Define a valid grid input
+		gridData := []CellData{
+			{Character: "P", Color: "grey"},
+			{Character: "U", Color: "green"},
+			{Character: "P", Color: "grey"},
+			{Character: "P", Color: "green"},
+			{Character: "Y", Color: "green"},
+		}
+		multiLetterRegexPattern := setMultiLetterRegexPattern(4, "Y", gridData)
+
+		assert.Empty(t, multiLetterRegexPattern)
+	})
 }
 
 func TestReviseAnswerList(t *testing.T) {
